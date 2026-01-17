@@ -1,76 +1,127 @@
-Return-Path: <linux-pci+bounces-45093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A01BD38EB7
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 14:36:34 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1DFCD38EDB
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 14:57:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id EC1743002536
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 13:36:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D4F3E300518C
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 13:57:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741A519AD5C;
-	Sat, 17 Jan 2026 13:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF07E19CC28;
+	Sat, 17 Jan 2026 13:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltWExw04"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHKeSqUH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAC5126C02;
-	Sat, 17 Jan 2026 13:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853691990A7;
+	Sat, 17 Jan 2026 13:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768656987; cv=none; b=V5I/wVma3IXNOzl+CxTeH5QiBgadGVF3cvvfjHlHmFfj9IW/FA5rEnL3nCVpfxIP+v1TvwbzXFoWVTfZ9Du75cASTF3y7L507x4B11XYvxpmraCEh3d8RFQqgtP9UKsRC6sOPWnmufWv/7BCWMCPcLwsB+ltE3W9WerKAb8QGeE=
+	t=1768658228; cv=none; b=Tn8hhORs/BWWNzkZAjwxmbIffay1naqyCnh6peydar5SFBYyEjoVigTnHujwbVCF57Et0nFDXxwuDf+e6uzN5FHs1sa0A8rQ6Dl9WDz+GlDiJCmMts7EBFpsJG8AOsjJEpeHC9Kyx2HbgX3n0WxcEwVAMG7A1dSNOAMnvL1xNsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768656987; c=relaxed/simple;
-	bh=vnwT158Epxhe04CU4LK8h34v5kHqeexLFo/E08FU7KQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=Sc7Ah/v8OqODYetGigJW5gnARe5xEtdEVsBcZIPq8HOKDur0aTqRGYiZqI/l47wbM9nMg+B7p348D0tXUtFfhsPaeXHM8A73iS45rzeRCEj3AgGuaNx+WfiqU9NeBmMvv/iV1zChfqSC70MFF/XHRWa4ek3qcQaxgtKs1tNs9BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltWExw04; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A27C19421;
-	Sat, 17 Jan 2026 13:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768656986;
-	bh=vnwT158Epxhe04CU4LK8h34v5kHqeexLFo/E08FU7KQ=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
-	b=ltWExw04d20+qef0fjPpX/viXeda3fD4C3SRA3ifl4TRGgb50ylnLBUY7srMoHz+P
-	 Dmay7GMa3+FQQW74YoBc7q+pXSWVx+cS3PxKCkO55ZrbhYn/F4KezJ4XESNeTVeQSu
-	 Io3i3eUXy95bN6BooQdwZ9X0WeS92Wx82789uElJ35IA5iUynQr4LHbvOq9Hucxivj
-	 qQ/YL0JTKyp6YeYJXlA9P676GIfIbmV3EbHnj9i1HhITWaBydBAXTGY7pqgZLBogku
-	 UoSzGFDP4BsS+kCOe+TOtp7HWoDwtEEYpA4F0rxF3POpUSoFGA4TUj1Gwko9mGq3HD
-	 tXGmKf9QrhSYA==
+	s=arc-20240116; t=1768658228; c=relaxed/simple;
+	bh=YJ7zKp24yxcA833nmxYEzAZPfVYu9D9cUMfZcNNLGms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxpSBfbUZ7DKOgm7RBDGS4Fc8pzjYn8BGdoreQyLvSs9nU76nJu4UgypYQtC8Yun5nH9Cx720e2GiIm7zomG1oxM+M4IGDltVXpr1SkH+Y6UdO9PlQLfIxQcINpA44J7gZa/U7O++ieTRENGSoGH8LGsDjqPhcjFjK8ZGdeYrsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHKeSqUH; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768658227; x=1800194227;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YJ7zKp24yxcA833nmxYEzAZPfVYu9D9cUMfZcNNLGms=;
+  b=gHKeSqUHsqTr6cx6drdW0l6r6HZiVenV1T+mrkohvLuQ9AyXP3+k/yyK
+   LPsmRzqMv+kQczre9asPR+00ZXOH4/LjrX6jBk59816PczOH2FetZhfYw
+   7Iy+RBvM2H8/49vyyRV+R+aHy0OOdq9Ebp+3/udz2Q4xfobe6FQxNqgKA
+   YkM6fTBH2vtm9f/hd/aNUro9pkzbSbSpVH+gSNqmzZE5ATahJiyvcmXpg
+   n5NdGAj2qLJ3dT7+97ox60tf9xgzzjwh2+EjgvVMP7OIhM/ijTrvv++DH
+   st+cJxxXRBjBznKrxpSxIRBRgHmRXtLKfS31MvXW/EtaOP0BXijlanyhv
+   A==;
+X-CSE-ConnectionGUID: 0gn7CyAaTbCFyhXPzxTrSw==
+X-CSE-MsgGUID: Y4sQ1zN1QJGSvO68ZnH/Pw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11674"; a="87519923"
+X-IronPort-AV: E=Sophos;i="6.21,234,1763452800"; 
+   d="scan'208";a="87519923"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2026 05:57:06 -0800
+X-CSE-ConnectionGUID: tA6KAEBgSBefhdpuAXrKzQ==
+X-CSE-MsgGUID: 6WJWbdXpQxuXOG2JgptCEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,234,1763452800"; 
+   d="scan'208";a="204706258"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 17 Jan 2026 05:57:00 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vh6nR-00000000Lu4-0mQ3;
+	Sat, 17 Jan 2026 13:56:57 +0000
+Date: Sat, 17 Jan 2026 21:56:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: smadhavan@nvidia.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, ming.li@zohomail.com,
+	rrichter@amd.com, Smita.KoralahalliChannabasappa@amd.com,
+	huaisheng.ye@intel.com, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, smadhavan@nvidia.com, vaslot@nvidia.com,
+	vsethi@nvidia.com, sdonthineni@nvidia.com, vidyas@nvidia.com,
+	mochs@nvidia.com, jsequeira@nvidia.com,
+	Srirangan Madhavan <smsadhavan@nvidia.com>
+Subject: Re: [PATCH v3 4/10] PCI: add CXL reset method
+Message-ID: <202601172149.u8U2DH7L-lkp@intel.com>
+References: <20260116014146.2149236-5-smadhavan@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 17 Jan 2026 14:36:22 +0100
-Message-Id: <DFQWKP2W9NET.2BA7CCOTLFK3J@kernel.org>
-To: "Jinhui Guo" <guojinhui.liam@bytedance.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH 1/3] driver core: Introduce helper function
- __device_attach_driver_scan()
-Cc: <alexander.h.duyck@linux.intel.com>, <alexanderduyck@fb.com>,
- <bhelgaas@google.com>, <bvanassche@acm.org>, <dan.j.williams@intel.com>,
- <gregkh@linuxfoundation.org>, <helgaas@kernel.org>, <rafael@kernel.org>,
- <tj@kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-References: <20260107175548.1792-1-guojinhui.liam@bytedance.com>
- <20260107175548.1792-2-guojinhui.liam@bytedance.com>
-In-Reply-To: <20260107175548.1792-2-guojinhui.liam@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260116014146.2149236-5-smadhavan@nvidia.com>
 
-On Wed Jan 7, 2026 at 6:55 PM CET, Jinhui Guo wrote:
-> Introduce a helper to eliminate duplication between
-> __device_attach() and __device_attach_async_helper();
-> a later patch will reuse it to add NUMA-node awareness
-> to the synchronous probe path in __device_attach().
->
-> No functional changes.
->
-> Signed-off-by: Jinhui Guo <guojinhui.liam@bytedance.com>
+Hi,
 
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.19-rc5]
+[cannot apply to next-20260116]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/smadhavan-nvidia-com/cxl-move-DVSEC-defines-to-cxl-pci-header/20260116-094457
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20260116014146.2149236-5-smadhavan%40nvidia.com
+patch subject: [PATCH v3 4/10] PCI: add CXL reset method
+config: alpha-allnoconfig (https://download.01.org/0day-ci/archive/20260117/202601172149.u8U2DH7L-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260117/202601172149.u8U2DH7L-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601172149.u8U2DH7L-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/pci/pci.c: In function 'cxl_reset':
+>> drivers/pci/pci.c:4979:17: warning: suggest parentheses around comparison in operand of '&' [-Wparentheses]
+    4979 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
+         |                 ^
+--
+   alpha-linux-ld: drivers/pci/pci.o: in function `cxl_reset':
+>> (.text+0x6cec): undefined reference to `cxl_is_type2_device'
+>> alpha-linux-ld: (.text+0x6cf4): undefined reference to `cxl_is_type2_device'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
