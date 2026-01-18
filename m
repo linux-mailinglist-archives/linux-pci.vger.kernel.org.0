@@ -1,81 +1,59 @@
-Return-Path: <linux-pci+bounces-45096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C2A5D38F1E
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 15:32:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 774C3D3945B
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Jan 2026 12:01:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E6161301EC40
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 14:29:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 567FA301399B
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Jan 2026 11:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C7FF1D88AC;
-	Sat, 17 Jan 2026 14:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0EB32C929;
+	Sun, 18 Jan 2026 11:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dcEUMHEp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLfpnukQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4D8219A81;
-	Sat, 17 Jan 2026 14:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696CE32C33E;
+	Sun, 18 Jan 2026 11:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768660147; cv=none; b=jDnV9FUzQCMAIy7vXjheisfX0gXGGN+Ubpplfw8goTwIWBriTFjISXiJxGHXvrGGqrxxzLUbn2m4sbwj7mztGfP5xFo31cTw5Xqf0NIoPgUlVYfmzhss/YoL0AeYC/FeMJMGmoDc4xdBqJkXJn7DrWWESBnyYOt9dXqlym0aTfU=
+	t=1768734040; cv=none; b=iAhr1GdreQeibEAri/vjW86tXZ8S7vY22uO2lUl2YQj25st8eH6eJAME1b7K/nuYsexYYgdnmvVlM1/VpD+pLHpcY2UsRd3jJsINa+J/GsbXI2mQ82mcbP+w2+w9R8j05YmU6cHmQHaiSj09FY5GP6XS5KIfjVRMaGVjaKacSsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768660147; c=relaxed/simple;
-	bh=VdoK6YjYcUZYVwWsOXZdcfJQ7oQefRNJZ53l4CSLxKM=;
+	s=arc-20240116; t=1768734040; c=relaxed/simple;
+	bh=ckRbPlV/dNYcRGTMbUnR2/FtLqhLVon9hSop/7dGzKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXaXhF5uTd3S+tuiBSzbYlGBvh9oBkPjWg61RncDt+j3qhwTqRRUdls425LaWtIw65BJtrQEsLVRvv5CGl9eFCrtXSx22c1yFbzQ5uvPzbyJmlxiXPtENG1ppWr1oWfrH3ainxuZSo/7Y921qWkHiS2wGHWGoNl884FmiXYZJG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dcEUMHEp; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768660145; x=1800196145;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VdoK6YjYcUZYVwWsOXZdcfJQ7oQefRNJZ53l4CSLxKM=;
-  b=dcEUMHEpSnM95OwqfsvyHnbanIqsrKtkX8cPmHev8eUHSQG93ZMqSC17
-   rDClyEJzO3IQ1ghB4WUzGTweTVcC65i32pUEmkPJPFiP9/uiyuetx5R/O
-   KC5pE3h4Oq9FAj4vcpYa+1IQeSIxKkHizrIsJZZMKJGHc2lBeUCpzjpFg
-   abJ+KH8nEQitoVQaZVgnIvAvXrs2h5B8FtrDHURVTuMQLcIFn4VGy9Mbz
-   8rrz6Z2wLKc288p1WyiUa4l93okTqBECI/rLQDTSYWPBcEfUIzc0c1xXL
-   190jcRuCenDmikI9ad/CbhNneLmicS0t5ysNh7h4LbzFAFcqgLFjuYCUM
-   w==;
-X-CSE-ConnectionGUID: dT/R+YYDQKScPh5uLYbr1A==
-X-CSE-MsgGUID: mdvnSrCcSiKb596Bax6Ssg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11674"; a="81317615"
-X-IronPort-AV: E=Sophos;i="6.21,234,1763452800"; 
-   d="scan'208";a="81317615"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2026 06:29:05 -0800
-X-CSE-ConnectionGUID: XVM2ANnaQHmfxSVkBLRwSg==
-X-CSE-MsgGUID: UsffCMT5SXyqLSSe6SZyVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,234,1763452800"; 
-   d="scan'208";a="205377178"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 17 Jan 2026 06:29:00 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vh7IQ-00000000LvA-0Cmy;
-	Sat, 17 Jan 2026 14:28:58 +0000
-Date: Sat, 17 Jan 2026 22:28:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: smadhavan@nvidia.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, ming.li@zohomail.com,
-	rrichter@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	huaisheng.ye@intel.com, linux-cxl@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=af80+q9QISqxkcrw7BIQ6hDSowCEVlWd9kjwrhP6HDTS+flPW2LEROujj14/0AqK4aoTra+9ZIL9OzI3Qz+03jJavUIG8cS2xFlchy15iXzjQ19DqtpsnrOf85UCosU8ZEM3XTAD/IVlpFbeYEXAqMYC1z29RD3AdOprW1oUKOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLfpnukQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2DDC2BC86;
+	Sun, 18 Jan 2026 11:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768734038;
+	bh=ckRbPlV/dNYcRGTMbUnR2/FtLqhLVon9hSop/7dGzKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gLfpnukQteg9gXxZAA5U22BLRPHRZf5n1G0LRszlaEIYFLLcBeZ5LBU4FTmlgpcc5
+	 e81VAkSqwpQdfLeIG2dYmoQRP1Bv2/dhin0F6HdhXKwV4RL8gfqCBKlLKI8xqOcLnr
+	 GseLEL1A3gdCjXBQA04tP2Rz+1pcDha+sNdp364A24ii9zzEaYG3byU+MojhKEchAP
+	 rOPjDP6tt97QuesvpZBqs99r2pxqH4n2BD9h118jHjq4m5Wsp2QtaIvNLH6MkyzcTU
+	 ZsIdYcp6sdoPyH1FfbVn/MxQ8tNTLw9H836ZWNsOk0/DCl9/KDv+tWRvVhkJjLvcSx
+	 FWxtauzLnWHBw==
+Date: Sun, 18 Jan 2026 12:00:31 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	smadhavan@nvidia.com, vaslot@nvidia.com, vsethi@nvidia.com,
-	sdonthineni@nvidia.com, vidyas@nvidia.com, mochs@nvidia.com,
-	jsequeira@nvidia.com, Srirangan Madhavan <smsadhavan@nvidia.com>
-Subject: Re: [PATCH v3 4/10] PCI: add CXL reset method
-Message-ID: <202601172246.rz4Orygn-lkp@intel.com>
-References: <20260116014146.2149236-5-smadhavan@nvidia.com>
+Subject: Re: [PATCH v3 0/6] irqchip/gic-v5: Code first ACPI boot support
+Message-ID: <aWy9T3VDyXpVG41z@lpieralisi>
+References: <20260115-gicv5-host-acpi-v3-0-c13a9a150388@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,91 +62,172 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260116014146.2149236-5-smadhavan@nvidia.com>
+In-Reply-To: <20260115-gicv5-host-acpi-v3-0-c13a9a150388@kernel.org>
 
-Hi,
+On Thu, Jan 15, 2026 at 10:50:46AM +0100, Lorenzo Pieralisi wrote:
+> The ACPI and ACPI IORT specifications were updated to support bindings
+> required to describe GICv5 based systems.
+> 
+> The ACPI specification GICv5 bindings ECR [1] were approved and the
+> required changes merged in the ACPICA upstream repository[5].
+> 
+> The Arm IORT specification [2] has been updated to include GICv5 IWB
+> specific bindings in revision E.g.
+> 
+> Implement kernel code that - based on the aforementioned bindings - adds
+> support for GICv5 ACPI probing.
+> 
+> ACPICA changes supporting the bindings were posted [6] - this series
+> depends on [6] to work and should not be merged stand alone.
 
-kernel test robot noticed the following build warnings:
+Hi Thomas, Rafael,
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.19-rc5]
-[cannot apply to next-20260116]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I have noticed you pulled this seris into tip (thanks !) - there
+is a strict dependency on ACPICA patches in [6] though as I tried
+to convey with the paragraph above and dependencies below:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/smadhavan-nvidia-com/cxl-move-DVSEC-defines-to-cxl-pci-header/20260116-094457
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20260116014146.2149236-5-smadhavan%40nvidia.com
-patch subject: [PATCH v3 4/10] PCI: add CXL reset method
-config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20260117/202601172246.rz4Orygn-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9b8addffa70cee5b2acc5454712d9cf78ce45710)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260117/202601172246.rz4Orygn-lkp@intel.com/reproduce)
+prerequisite-message-id: <12822121.O9o76ZdvQC@rafael.j.wysocki>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601172246.rz4Orygn-lkp@intel.com/
+I don't know what's best/easier to handle this dependency but it is there,
+I don't want it to cause you any trouble so I reported it as soon
+as I noticed.
 
-All warnings (new ones prefixed by >>):
+Thanks !
+Lorenzo
 
->> drivers/pci/pci.c:4979:10: warning: & has lower precedence than ==; == will be evaluated first [-Wparentheses]
-    4979 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/pci.c:4979:10: note: place parentheses around the '==' expression to silence this warning
-    4979 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/pci.c:4979:10: note: place parentheses around the & expression to evaluate it first
-    4979 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |             ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning generated.
-
-
-vim +4979 drivers/pci/pci.c
-
-  4956	
-  4957	/**
-  4958	 * cxl_reset - initiate a cxl reset
-  4959	 * @dev: device to reset
-  4960	 * @probe: if true, return 0 if device can be reset this way
-  4961	 *
-  4962	 * Initiate a cxl reset on @dev.
-  4963	 */
-  4964	static int cxl_reset(struct pci_dev *dev, bool probe)
-  4965	{
-  4966		u16 dvsec, reg;
-  4967		int rc;
-  4968	
-  4969		dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
-  4970						  CXL_DVSEC_PCIE_DEVICE);
-  4971		if (!dvsec)
-  4972			return -ENOTTY;
-  4973	
-  4974		/* Check if CXL Reset is supported. */
-  4975		rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &reg);
-  4976		if (rc)
-  4977			return -ENOTTY;
-  4978	
-> 4979		if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-  4980			return -ENOTTY;
-  4981	
-  4982		/*
-  4983		 * Expose CXL reset for Type 2 devices.
-  4984		 */
-  4985		if (!cxl_is_type2_device(dev))
-  4986			return -ENOTTY;
-  4987	
-  4988		if (probe)
-  4989			return 0;
-  4990	
-  4991		if (!pci_wait_for_pending_transaction(dev))
-  4992			pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
-  4993	
-  4994		return cxl_reset_init(dev, dvsec);
-  4995	}
-  4996	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> The ACPI bindings were prototyped in edk2 - code available in these
+> branches [3][4].
+> 
+> ===========================
+> Kernel implementation notes
+> ===========================
+> 
+> IRS and ITS probing is triggered using the standard irqchip ACPI probing
+> mechanism - there is no significant difference compared to previous GIC
+> versions other.
+> 
+> The only difference that is worth noting is that GICv3/4 systems include a
+> single MADT component describing the interrupt controller (ie GIC distributor)
+> whereas GICv5 systems include one or more IRSes. The probing code is
+> implemented so that an MADT IRS detection triggers probing for all IRSes
+> in one go.
+> 
+> The IWB driver probes like any other ACPI device. IORT code is updated so
+> that a deviceID for the IWB can be detected.
+> 
+> The only major change compared to GICv3/4 systems is the GSI namespace that
+> is split between PPI/SPI IRQs and IWB backed IRQs.
+> 
+> The main GSI handle - to map an IRQ - has to detect whether to look-up
+> using the top level GSI domain or an IWB domain in that the two IRQ
+> namespaces are decoupled.
+> 
+> IORT code implements the logic to retrieve an IWB domain by looking up its
+> IWB frame id, as described in [1].
+> 
+> Most important implementation detail worth noting is that - at this stage -
+> ACPI code is not capable of handling devices probe order IRQ dependency on
+> the interrupt controller driver their IRQ is routed to.
+> 
+> This is not an issue on GICv3/4 systems in that the full GIC hierarchy
+> probes earlier than any other device, so by the time IRQs mappings have to
+> be carried out (ie acpi_register_gsi()) the GIC drivers have already
+> probed.
+> 
+> On GICv5 systems, the IWB is modelled as a device and its device driver
+> probes at device_initcall time. That's when the IWB IRQ domain is actually
+> registered - which poses problems for devices whose IRQs are IWB routed and
+> require to resolve the IRQ mapping before the IWB driver has a chance to
+> probe.
+> 
+> Work on resolving devices<->IWB probe order dependency has started in
+> parallel with this series and will be posted shortly.
+> 
+> For PPI/SPI/LPI backed IRQs the probe dependency is not a problem because
+> in GICv5 systems the IRSes and ITSes probe early so their IRQ domain are
+> set in place before devices require IRQ mappings.
+> 
+> [1] https://github.com/tianocore/edk2/issues/11148
+> [2] https://developer.arm.com/documentation/den0049/eg
+> [3] https://github.com/LeviYeoReum/edk2/tree/levi/gicv5_patch
+> [4] https://github.com/LeviYeoReum/edk2-platforms/tree/levi/gicv5_patch
+> [5] https://github.com/acpica/acpica/commits/master/
+> [6] https://lore.kernel.org/linux-acpi/12822121.O9o76ZdvQC@rafael.j.wysocki/
+> 
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> ---
+> Changes in v3:
+> - Dropped ACPICA patches
+> - Split IRS OF refactoring into a separate patch
+> - Renamed new fwnode interface according to review
+> - Applied minor review comments
+> - Rebased on v6.19-rc5
+> - Link to v2: https://lore.kernel.org/r/20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org
+> 
+> Changes in v2:
+> - Cherry-picked ACPICA upstream changes
+> - Minor editorial changes
+> - Removed the "not for merging" tag because now ACPI specs are approved
+> - Rebased against v6.19-rc1
+> - Link to v1: https://lore.kernel.org/r/20251028-gicv5-host-acpi-v1-0-01a862feb5ca@kernel.org
+> 
+> ---
+> Lorenzo Pieralisi (6):
+>       irqdomain: Add parent field to struct irqchip_fwid
+>       PCI/MSI: Make the pci_msi_map_rid_ctlr_node() interface firmware agnostic
+>       irqchip/gic-v5: Split IRS probing into OF and generic portions
+>       irqchip/gic-v5: Add ACPI IRS probing
+>       irqchip/gic-v5: Add ACPI ITS probing
+>       irqchip/gic-v5: Add ACPI IWB probing
+> 
+>  drivers/acpi/arm64/iort.c                | 193 +++++++++++++++++++-----
+>  drivers/acpi/bus.c                       |   3 +
+>  drivers/irqchip/irq-gic-its-msi-parent.c |  43 +++---
+>  drivers/irqchip/irq-gic-v5-irs.c         | 247 ++++++++++++++++++++++++-------
+>  drivers/irqchip/irq-gic-v5-its.c         | 132 ++++++++++++++++-
+>  drivers/irqchip/irq-gic-v5-iwb.c         |  42 ++++--
+>  drivers/irqchip/irq-gic-v5.c             | 138 ++++++++++++++---
+>  drivers/pci/msi/irqdomain.c              |  23 ++-
+>  include/linux/acpi.h                     |   1 +
+>  include/linux/acpi_iort.h                |  11 +-
+>  include/linux/irqchip/arm-gic-v5.h       |   8 +
+>  include/linux/irqdomain.h                |  30 +++-
+>  include/linux/msi.h                      |   3 +-
+>  kernel/irq/irqdomain.c                   |  14 +-
+>  14 files changed, 734 insertions(+), 154 deletions(-)
+> ---
+> base-commit: d0e305301e82474223bf26185e86e7dc2eb85350
+> change-id: 20251022-gicv5-host-acpi-d59d6c1d3d07
+> prerequisite-message-id: <12822121.O9o76ZdvQC@rafael.j.wysocki>
+> prerequisite-patch-id: 9f722bfc7e4861af40637017a83826401b3958e4
+> prerequisite-patch-id: f619b4724a25a5c2b95032ef4c6d0b53dde45142
+> prerequisite-patch-id: 3738d015d93d77b3d381ba8de056be533df48794
+> prerequisite-patch-id: 50b1ee01b2ee63f6db21276ec24dadd645f8931e
+> prerequisite-patch-id: 6671f1c96dc89d5e375196e545c9750c2378f010
+> prerequisite-patch-id: b5d91dce8f61ab75796ba6a766d499d7321c0231
+> prerequisite-patch-id: 1f433eeb8848ce51c2b2fe601813939a042c6c0e
+> prerequisite-patch-id: 4f9aab64e4f4a75c18ae692bd903266069100d34
+> prerequisite-patch-id: 793a7b3fab40b903ffa0855e0db5336acb69505b
+> prerequisite-patch-id: 3eeebe1df8abadc1606cc6dadd15031ad46ff64f
+> prerequisite-patch-id: 3477bb220e91c9cdb4d778ce15e44babbefddf23
+> prerequisite-patch-id: 153be22f930d0c05bc04b37006bdb1e286883a92
+> prerequisite-patch-id: 1a7dcfd7e1317aeec52c772f3150c115e965af52
+> prerequisite-patch-id: 43a604c0109163e51a892d888c728794bca8a0a3
+> prerequisite-patch-id: 580debc0f26b7c301160504e2360de6765e7a179
+> prerequisite-patch-id: 15f2c86c557c835e4aed0cb914c23e04da1392ed
+> prerequisite-patch-id: 00986721db8da2e52c733971b482b9cf0c32910e
+> prerequisite-patch-id: 9d0607df90015bac8768549cbb0a19580f0b2661
+> prerequisite-patch-id: f478f56f3ded4d0ce43254418deb5e10f49555ef
+> prerequisite-patch-id: 6f9563683e92392564935f24cc5e8be23301790c
+> prerequisite-patch-id: 4d701f77a597391e0d04c5da3d6f1cb24d1e40d0
+> prerequisite-patch-id: d70577c2355648acbc7c857c5512df21280e917f
+> prerequisite-patch-id: 8c6408293baa1a758b0b0b4f078eaf7dbe1404e0
+> prerequisite-patch-id: 84008a72aa67b54af8a294a0fc07d2b6eaede597
+> prerequisite-patch-id: 97acab35d513bc6b091efa4185a9826262d5ed79
+> prerequisite-patch-id: 04652a3bfdf9f4fa2ba829631c899ea3569f11a2
+> 
+> Best regards,
+> -- 
+> Lorenzo Pieralisi <lpieralisi@kernel.org>
+> 
 
