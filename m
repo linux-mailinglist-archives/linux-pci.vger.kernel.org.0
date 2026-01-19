@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-45180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2893ED3AB27
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 15:06:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9837D3AB44
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 15:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9595A3007939
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 14:03:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ABAAA3087132
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 14:04:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89B19374180;
-	Mon, 19 Jan 2026 14:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F187436CE0E;
+	Mon, 19 Jan 2026 14:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="oijIVXgQ"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="cREaGaRF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECB9361DD9
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 14:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625A8368294
+	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 14:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768831433; cv=none; b=D7ge6Ys+7ziQV33GDSDcunKgfgdDGZgt8iKhe5+3SZf9hv88gzVp/1PRpcPlDhMgN1k4R9pJ34AK5heCpMojG6/J/X8M3GaiI0OFXFSBvdR1w+2ZSLKEzjuWpwRBhHbX6kG05vVc0kktnWTBehqgqv9TrlNUrKoGJrBchLeMkoE=
+	t=1768831479; cv=none; b=MlxXt6F0eRH2Agu45DPwrKaEFeqfgRzzVdKFgCmA4/rc3us6NLLIcrJK69zpSVZ5UaARppcoTHoKOeFpyJADBFdXvZw09PU61lRWLvOxVsleLTbSrddgihKCjPlX/QC1AO1WSKKJB+U6782/mxX+9hAD2lVudulF/MJ0GFkP9EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768831433; c=relaxed/simple;
-	bh=mTAE+Uz1BGS1b5G0yeV0TYVfbfqnRu+U7F6kK79xBH4=;
+	s=arc-20240116; t=1768831479; c=relaxed/simple;
+	bh=m2uBx0rH9BBwtr/Uco1kTewsgSVG+SUQOTeuEoSlDOQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h19swCfx9Jnd1zgIuccdWyyPy1kxcMbb3BHywUHPUUPjj9EUnSi+TLdHUUmqPKt0xxmbnTHb+9D+GejGrarMLvMvHEOrRYcVvtjFng3hajXoI/ZFWQ3n/MCmi5lxQOAbBjmpbREiP8GlZI4Sk1bTPX/kuCsnepGytpYVhXIf92o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=oijIVXgQ; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:Content-Type; b=C3b8n8sRDWvaVYTni+ps/6rxItgLvpQWnlSz68c6DF453melzEhVfALFIdEbMMhnQuyH9SheWj2wSUh1pOPa3H0adUI4qz8+V0oUGlURHuqVFEXmyuDeWNcmuPIFpfG+p0MLC1o5M3a8dY+crwfxsUaV6SIejWxUHDimAA1Kssk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=cREaGaRF; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47f3b7ef761so23296565e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 06:03:50 -0800 (PST)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42fb5810d39so3452908f8f.2
+        for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 06:04:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1768831429; x=1769436229; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1768831477; x=1769436277; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qi0fMsnbGNNAqeW2KXFtzgi15jKwvRfrQtKC+NHQLH0=;
-        b=oijIVXgQ4xqiS2NrmPLq6TR0f50MbnFwamEvVEThd4u5/cgjFxI8Fpocc0jELJE8Un
-         wzvavK7XRcjYMvB11KowGsyzSBDjqwkxWPYeBGg3vb6zoCSfcvuvxqk4VvVngzLEblPe
-         Q62S41vvzGwYYP/wqJlp2PvMr6Uq10aOT4gO+2lj39uGKOsACT3+oBnNPeH9aB+gErew
-         6Km1zv/o/EhoBpzf+u273glZp17hZLZB+jjPOy/FEz2+x3P5WMpUaeehYmsWAK1SxkmZ
-         YTV1PyclP+6opjHTt9Y/AsH4McuFDDSi78LsqpYdLxP6EuyYphQB1hlB245BmCzbm8zu
-         gXpQ==
+        bh=S+uiJg79CSTOd7IU+Zjr8vG48esanihoaH1GIX6WcHY=;
+        b=cREaGaRFDQFI5hL97AT7ZRhouQ8ZAcoaODf9B8xIP2SiQfkWbmPLLndfGFr21SwMN4
+         fYryGwaaikaOtlOtw9W/OyX2SC1vKlU7lCEZfGzmS1AA56bhj5S3dZpxmbIPgao0nIYK
+         WiJb4ob6B4Q72iRlsaqHB8ekMcSdg8lk9oLDb1YZQJ6MOzbEHXmCrQNzE9FavQyI1hZD
+         1ooOigIQR8Bzqul48yt68DS4j15LIGY9EImCMWyBsP/SRboorOxhXV47JrpAi6+8xNQC
+         pfsZ4oVs42SbZ9k9fVUGfIwiXc2kMGhhKTOEZcO4B/YPU8d8HGLuwKFvBweYQ7wtgLTm
+         2jzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768831429; x=1769436229;
+        d=1e100.net; s=20230601; t=1768831477; x=1769436277;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Qi0fMsnbGNNAqeW2KXFtzgi15jKwvRfrQtKC+NHQLH0=;
-        b=dfn59xjbCaSCGyMx9nxcazAI0s0ez5OKCJsTXTYLwbMfqvK26GBhL9bA2b3zEEnZDQ
-         NBQ+ZZPydHFQz8mHfnAjT0dJGxN66BxgsJYWzP3WyI8idMJVEEyJcg2OAAUwX48/XqAG
-         M7BHQRmLd9xu8klZ86I+gcxRTIIksBKa4rc0+lF3dzUeKiBwhvavD4g7ZUtUEstKchuZ
-         q5xE4GPFrzV2GUhtDtdPIGq4I6Hu7qpbPxXih3OdXHjypI14pX8yxTdJTkMnv+2GvRra
-         BimXfuiQtgg2U0XNhTtFdHRhxuaFX1wH7u+LniBBPG58YfeIho+gagrJ6KGO2h3fUijj
-         Zwvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5ADAzvDVB7skT6GGoZvwd6ClUcvrbAfnWklEEPUACOB2CNuucsgzhqiVOG6jSiqzRMfyRr0I5FHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV1BSn/DTPDul50L8kiU7U6E+hqhNc+h1mfuBlRYstTTtGPviy
-	WuuvjFC8WnXviNiEb2ZmNiMyoz4J/sdW/nyuPJbj5Cxtx4ncG+U90ddbGKtMH0j9R98=
-X-Gm-Gg: AY/fxX76w4ZIDCcvqndkjnOoG8yr/SO0m/HHFQ7K3z2GL9fPzVIm5Xjq/vJkMxW3Uae
-	YitZFbNkBnRz0lc38xL4QfaeA7wrZNOyqKtCFqoRgv6w/JMLgQ3gOsnhLgNOgdDh4me+pVMPSut
-	oeppOl3slk7RugY6eRHyuRYwhf81eZ/soqQnW5OekKVTULU1325hGYx3AQx09xYtiSxVt4eebpq
-	lA1dA9dCmYQ+uNun1VsH3EaLdykeMAqmtiz197aYXZ+WS78xQZM8HqQBwyOQ4kjc6Qcsy6zULPX
-	HnLlDSjcOynVFZ58dP4qfoW4ue260qJO1ZMOmd8HSM8Kc0mz8gjrvBFPyvZgHBUrmEu/doh0B8V
-	wFtnEXB8UpRN/sLOwULtpRD/FIxfJ93rJElm5fuGTRhICL/vNrllwpQLdEj4s2/i/YtKtpxSJyR
-	niVItz5pQ00wH99+ZZsw==
-X-Received: by 2002:a05:600c:c48e:b0:47e:e970:b4e4 with SMTP id 5b1f17b1804b1-4801e3494b7mr155374755e9.29.1768831428511;
-        Mon, 19 Jan 2026 06:03:48 -0800 (PST)
+        bh=S+uiJg79CSTOd7IU+Zjr8vG48esanihoaH1GIX6WcHY=;
+        b=giJ1UCiFg7wKJl0jSPiWJ3ab0YLeBSjX+Gwtfkv7frMWi8pX7yKnEN75gbB6z4inq0
+         xjURU3CWHTH3D1PCggWQjmmPK4pwvEXfzLryq+VRYifqaBdv9cHHHzNGEw3eThozlTkn
+         bNAgDCiEGpRJsoJnyolDqnIWbYUGt4LDRrN5cfuK7qyV45VuUzgk2jMVoBM0fN2burSV
+         7L8y3KZSvCkZgiZ+sZaB6uLalJcjhd7CsCNH6Xe2JxYBuxnX1U1b7DRQP1hDC6+Riqjy
+         Abqwlz60YFoWKeyBkeVkmD0OcegqEaL6YpSeP5qNJJy1uT9pvWik9O2gBqHQlWrx9jYS
+         B5JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvyKTXzAo4UytHTY7DBpodVcUyOBh3QrMx2aImep4LYHijmDrmJmalA5sEgzPDoRhU9rjO1EmX7Gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBr//Su3ppBenCCbRjF689ICuG1H70cUUgS7Qo10OvR5/euzoF
+	ukDQsWXin0QIpQKwPU5EGv7jBJ9FU8xM8WvSzpGtsY2S/ZsmUgSEY87jp3cPWMZUktQ=
+X-Gm-Gg: AZuq6aI1zDk+6Wd82EavRYYYxHG1Mr4uNCcntzS5uH3oRMJy/RDyO+L7fAywoHTKEW4
+	Bv5xn8O1DOsBX7X++KfClQr2G6BwNIA0Szf0VMT8Oyfj6ywJQv7ump6qtWOVPa13fI4Z66M5TKh
+	1K30dr7bLvDztN6bq/ADKwvZrzIyQ4xfrEw5yI7q23XAlG0fntrZT5K+CKdKmxEPiU3HNLMf+jA
+	oWt5TChOjGvuYvqLWci9vIMRlKmXViBsKTd2/krAr/K0OZBoMYF5jPbc1t6ZNlH+jw7VFc3oLkq
+	STxBES9LjYWU/7sNzYCLP9gF1P9Lz5tq919hic16Py8UPt6vrsIDSlID6FR7plW7Amy9TPF30RN
+	1ohZEjaUOjQYUUvyqGFQG6goOvDZ1Qo0nxTgkogiFCOxwtUzy/66DE2tzU8ZI1gnN9CO6AN+7Ng
+	3QD6dlabGfIWFpcU7xBw==
+X-Received: by 2002:a05:6000:400c:b0:430:f742:fbc7 with SMTP id ffacd0b85a97d-4356a0296e9mr13698492f8f.14.1768831476764;
+        Mon, 19 Jan 2026 06:04:36 -0800 (PST)
 Received: from [192.168.50.4] ([82.78.167.31])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f3b7a5f94sm266035795e9.0.2026.01.19.06.03.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43569921df9sm24010322f8f.3.2026.01.19.06.04.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jan 2026 06:03:47 -0800 (PST)
-Message-ID: <fb7ec096-372b-48f4-b6ed-e224a05d55e2@tuxon.dev>
-Date: Mon, 19 Jan 2026 16:03:45 +0200
+        Mon, 19 Jan 2026 06:04:35 -0800 (PST)
+Message-ID: <f6c7cea6-fbd0-4b3a-ab89-a3c26be11ce6@tuxon.dev>
+Date: Mon, 19 Jan 2026 16:04:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -110,9 +110,7 @@ On 1/14/26 17:33, John Madieu wrote:
 > Fixes: 7ef502fb35b2 ("PCI: rzg3s-host: Add Renesas RZ/G3S SoC host driver")
 
 The title of the commit with SHA1 7ef502fb35b2 is "PCI: Add Renesas RZ/G3S host 
-controller driver". With that addressed:
-
-Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+controller driver".
 
 > Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 > ---
