@@ -1,241 +1,257 @@
-Return-Path: <linux-pci+bounces-45188-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45190-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA2E8D3B016
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 17:11:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 74245D3B03F
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 17:17:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 571213044995
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 16:10:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 42DBE306026C
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 16:15:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84A129B795;
-	Mon, 19 Jan 2026 16:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1D752DAFD2;
+	Mon, 19 Jan 2026 16:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9sTMRec"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SBBYpPKd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011036.outbound.protection.outlook.com [52.101.70.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57A028D8F1
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768839044; cv=none; b=WA9viV5yV4GoKO9VaL/lw+ZePAoy0pJmdNhy6hXIerPosP/R3vawr+cmGegxPkc6tztH4NMfWzeGbTai1QviUni+ia3ZmVj0srM2DXxq34bZaDGsUZcEDSxqzY1Q0OEaPbjhiVb1b6NxCJykR/KX56VMpzjXmRRUGoYM4NekDo4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768839044; c=relaxed/simple;
-	bh=xojvTFzwpY+4N5Z8neU2E8/iFj7GHyaguBJW+DTwJy8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qu3ZAaT6Kv874YzJpxagW6UD1dS2RUsN/EwK8QAQyec1E87++vFcEPfPZNayVwu/e8wukxNbFBH7y0SFyD/t+QqMOPuH2EyXatGYXqn/sxQVwlu8Sgxqj1k1XOtPR/EsHHMUwFvyvUhkeEmqniwcMok/D6ebCn4Aism80P8OmTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9sTMRec; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 786A4C19425
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 16:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768839044;
-	bh=xojvTFzwpY+4N5Z8neU2E8/iFj7GHyaguBJW+DTwJy8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=d9sTMRecQoXPn0XmphhL4iwgEPP4PGEwrPzBkHph2NMzzpnvB3RdTQJ4CMte97HVe
-	 PlunS80rwQ5dwvt28qMhlufXayHM9MXBfsDpy6i6fkdWbvgYorFkV3HxhJOjOGU3UH
-	 42LeZcepc+i2HEuZSjuO7hcIasWI73TlNGFZRJGJjsN3Ln0a7xFJ9AR0peJwHuPNCZ
-	 lL95ikM3Xe4uS1wXpI3Nv0yN/Pug5NocglxKUodhqht9MqXOmkxGAxn4oyg85QPaRA
-	 D8qhRcuhgjOs/ay0WNA/Pm1DBLKUaoDNjfLm1P7ntRZRmpZnBpxNyhAidW9JBX29HY
-	 vHEwhup1Ymy6Q==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-40438380b88so2769712fac.3
-        for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 08:10:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX7NJTtTWHA5XF1bT8R6VgQ/C2n+wls6MhT8lcIaDb1hqrkd0qHokFizjF+xtBx3abwkooRqOEKDXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqM28rz/NCqdl18webgBhHg8mAIRJ4pWtTGG4+Tpuspmjo/Ewt
-	6RfhL12y6owPTom7sMIxfnmcbeked0VT0apUuQQflKZOz1G/HxlNTGoepsJXDL2XmEMGcs2UVZ0
-	5xe2RtkAhL1EbFig1Nv1NyHulCwDCVNM=
-X-Received: by 2002:a05:687c:12d:b0:3f5:4172:21 with SMTP id
- 586e51a60fabf-4044c65c1ddmr5361229fac.58.1768839043584; Mon, 19 Jan 2026
- 08:10:43 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E36285060;
+	Mon, 19 Jan 2026 16:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768839316; cv=fail; b=ecL8AicHTpVSdlKORYKid+7OWSyv2exJcRBhTXc4RwPGjKUbgBTxNDP6Fr466ioSfkMbIKDKH8qxwb+JMDCK7C1ZEMcqih12Oo2Hmem6C/q2UUMKPyEANKuLPugDq55iV0s8ykwEEpGbdaV8T7XVhNS5gs28yV6jvZb5TAGczCg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768839316; c=relaxed/simple;
+	bh=4x3QfSrM1aOqbGh5J40Q/mGKDxttylJ5jx0UMCeNlOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=p68Ls+WPvuXm0s78+HGDh9LYnqYPtIrbQrtumL2Qz7fPS9DdkcaO2FTWDMYdCRDg3IXCX6kQvVJYKv/Fz9r+OugQ1yr2vgdL8q6zJ0dyry9I9zn8jovsCZvZ+yQXFkyBDrmBXdg/ozfdjH+qLntbY5DSL/bonnjNklh/8W98pc0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SBBYpPKd; arc=fail smtp.client-ip=52.101.70.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B7rOk53vIY54ex1dtDfPkehO/0g8uGGsamma85Miv84mxmWAufU773wYyzOR2ixE+t0sJTmzvYFACXNUPszSkHYhAoOPtWPCx3nl+Zdks/3wag8jedwYUnLfiQOWvgK0MgUZZdxs7mKTOcoM/A+EvjU+Bquhh1z+OGdt2kLJTaue844Gq5aCDNt9QfWmiwu4/fAZGdK7PQF1vjzjYxpjYP/Bz1BCMqYqTNfFBJUcSKKZK8+lMbP0XF4Gl7u+nRzXl9EPiVzECVm+9bF96tt4oIrg5DZCZksU0I8rvGRSstfB3fRCM10NehubPvbEqmfiVbUYhb7gwnpLErd2MckLRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e1z/TiPyzpgsI+rxYYcvYp1pdsm29rt1OfxChJ0tTGU=;
+ b=hOqADQF+PSneGbeGm2w7Ez1FMky+uwutxedaK9eO+73Dk2UdCerpI4/hmd/DblL0vIO0KWCtRYiYCrnAKaaJ1GKhs89Xk/NRsRFZ5rXBMY6Nc9y5TVzAety1f+vWK2cmgaabLubKl5/NME7yfqcZLybbNd5O+1L5cjUwFe5HD3DmPdoZvuibynViRW4yUqZwWVjwEAej23e8l38An2bSI+9r9uUfPVf8axgfEnG+8zrHHjg/NJscDg2x/lIuwYQilfCAHFe9tZJFge0ySurXm1e+KuoZFYzY4+TuXogwIdM5DejTm5UcoY3GTxcyitbToYF8odf4D/8cRknlXORFnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e1z/TiPyzpgsI+rxYYcvYp1pdsm29rt1OfxChJ0tTGU=;
+ b=SBBYpPKdCelDsHmWkYvIa4TudqgyFd2i4wTrnntROEoVKPPnxvHMHZm+uCz2jKg4HjRuyq5RKJ9G4Lyq/p4ODaCovyLPgLi6xgTjYR/oXXcH/eVBsLKTNaXcDoA2MYDIhEl6AtK0KkhuaGeSDDsMX4Mzuko7Cf4UEtA7CEmwAZOjiEUpfMZ0pOvBk1V7kW4Fp6/Cgui9ZLXrj1KFXM249x3SOpCEItV9GLCohrbsLNJMg3H9g2odA9Ras5PPZLNiWJ0wWlA9Z0dhzzueOvZSniliP4JrI5Fnj+0ATr7+D+fEbExrEpf/tMb+6kTof4otzg4VfBxLeSKQ6J2ti5IEkQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PRASPRMB0004.eurprd04.prod.outlook.com (2603:10a6:102:29b::6)
+ by AM7PR04MB6888.eurprd04.prod.outlook.com (2603:10a6:20b:107::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Mon, 19 Jan
+ 2026 16:15:12 +0000
+Received: from PRASPRMB0004.eurprd04.prod.outlook.com
+ ([fe80::6ab3:f427:606a:1ecd]) by PRASPRMB0004.eurprd04.prod.outlook.com
+ ([fe80::6ab3:f427:606a:1ecd%4]) with mapi id 15.20.9520.009; Mon, 19 Jan 2026
+ 16:15:12 +0000
+Date: Mon, 19 Jan 2026 11:15:01 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Sherry Sun <sherry.sun@nxp.com>
+Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+	kernel@pengutronix.de, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/10] dt-bindings: PCI: fsl,imx6q-pcie: Add reset GPIO
+ in Root Port node
+Message-ID: <aW5YhTaclPKB9s14@lizhi-Precision-Tower-5810>
+References: <20260119100235.1173839-1-sherry.sun@nxp.com>
+ <20260119100235.1173839-2-sherry.sun@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260119100235.1173839-2-sherry.sun@nxp.com>
+X-ClientProxiedBy: BY3PR05CA0013.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::18) To PRASPRMB0004.eurprd04.prod.outlook.com
+ (2603:10a6:102:29b::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260106222715.GA381397@bhelgaas> <CGME20260114094643eucas1p1a2fdc6c35dd27741c18831b34bbed0c8@eucas1p1.samsung.com>
- <0e35a4e1-894a-47c1-9528-fc5ffbafd9e2@samsung.com> <aWf4KyTSIocWTmXw@google.com>
- <61e8c93c-d096-4807-b2dd-a22657f2e06a@samsung.com> <aWrjhqC_6I2UNXC5@google.com>
- <CAJZ5v0hWt63=0yjFrbTY8zXubh-Uc6ZwAndT73VL7itMkTe81A@mail.gmail.com>
- <CAJZ5v0gKZFWzuFT=cF_Ydjpro+sXzdeZ_+B4GEfiifa-cxpbGw@mail.gmail.com>
- <d2c006c3-44c3-4270-b1ca-5d1a0d7f4e09@samsung.com> <CAJZ5v0j=TM6DoGbW1agbiHUbq46G7pyd25E=ih2at7dvYr83Sg@mail.gmail.com>
- <6e0c511f-1127-4a35-a40c-0161de0ec752@samsung.com>
-In-Reply-To: <6e0c511f-1127-4a35-a40c-0161de0ec752@samsung.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 19 Jan 2026 17:10:32 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0h-f5kgJ-p4LqX_8fpz3T3AVqq_7S2n4b1vZdPQoF-MFA@mail.gmail.com>
-X-Gm-Features: AZwV_QjcZaSlUnYJhTjJWUVJFBc_fqUs4PM7jI8f22EWDYO4JXSq9j7CUt_nGvw
-Message-ID: <CAJZ5v0h-f5kgJ-p4LqX_8fpz3T3AVqq_7S2n4b1vZdPQoF-MFA@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI/PM: Prevent runtime suspend before devices are
- fully initialized
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Brian Norris <briannorris@chromium.org>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-pm@vger.kernel.org, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PRASPRMB0004:EE_|AM7PR04MB6888:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d7ff847-cf4a-44f5-8d6a-08de5775ec5a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|19092799006|376014|7416014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rboAubay3V866KPlYFlkkvpkFhobdZK8PIsR6kOIAUr+mD2FN/vFQB0GCnr4?=
+ =?us-ascii?Q?U5UTJdCN9K67sLzhWP9bxb5f8+0z8/tNy2GplTe3D9cFia+DtfazubGEOIij?=
+ =?us-ascii?Q?9FI06Z7os7JOoc/krcdiGkg20kdw5/Z5PfRWu7kyvTewpzUQIcXTXac5V7jA?=
+ =?us-ascii?Q?0dBJctN67c41QIcHQWbgA1ZUxud+hnZkcgR8R7eORZ2XAgQh6HANG09/Cd+K?=
+ =?us-ascii?Q?RxaASZ6pYv+DVWfT7zqWID7aRjXykpwuGeTtFANZk/uLg4mPA2JD8KzV+Udl?=
+ =?us-ascii?Q?SflBsm5gt7PY9H550KQQYcMjn1KOym6yOBNIAV9DjJCOBD5lWqHU2em1Jr5U?=
+ =?us-ascii?Q?wJDIEXuZ8ZlW9xpDUAzMB6rxDvmptiZSFAXUKwofe3t12+t9ok9Ut06yZAF2?=
+ =?us-ascii?Q?epIVUAX6j67jVRMEL6KsCY7mXhxbr6RoKUxt7kOYx/mawvKuH+2paPLuYxhW?=
+ =?us-ascii?Q?D6ypYXaxhvIKuF681uIEq+NPV4d7shnGvFMetVy/KddRXVVM7p4U9XYupjfe?=
+ =?us-ascii?Q?zkPm3rak8PiVdXf9OvEoptvKo/bIUcFAo/AYEH8K/jzPDaOWKEtgOxTOT8/m?=
+ =?us-ascii?Q?Bu32SCgKQjd14ujBiDcmZ8azfoD5uNJ/Ig85kRGuKaTsurpF70e25UR/xpVw?=
+ =?us-ascii?Q?PJqE79FFmrvx5+BTEq6PAV2gqFviSwK7Kcm/02XPSF3ej2aoESpalfwsFevg?=
+ =?us-ascii?Q?MIF8/TbMVommGU1Ly3cKsQC66nYqO4ZG6SybaAt7WkF4GvEiZ3TLENE3LkgO?=
+ =?us-ascii?Q?nvJeZYynoHZFkF1nyenAIt3l27tR61kDUWA1LTb898F6t+RxWjZ/YE1RFWPx?=
+ =?us-ascii?Q?IrhYCEwy1TZ1HQl/KaNACFV4qtpgP7tOrLm0fwYEjc1H97rGWsrCr9iZoRv6?=
+ =?us-ascii?Q?hpVrxlaWY4PZSYkO0xltHsqbiVbJKcrFe8G0tg7D8usUy7eiIaCAsL616GYP?=
+ =?us-ascii?Q?DdJXvfat5mlsN8q++oaGI05fbuUBK7PzD2/Vl/lK32v2RPeGKDOx8RpJhmYe?=
+ =?us-ascii?Q?AEaXv07sV33NSxdtE7l9ZAeiERpJY/rXHM7ho3jkR7bSOxS8V5hZNQDeN0gX?=
+ =?us-ascii?Q?HLkM37qbbN8M0IIAGS0JxSws/u8wcC4q0Ks8WmA1cFPRTHcVinhi6LpXQt4N?=
+ =?us-ascii?Q?E/6p4kHyryAqJDL2JBTmpHdDMdL1+i5P7pa9s6ukfyKhofFgPzdn1OnzukFu?=
+ =?us-ascii?Q?XhS4pfFKVMoXEvoSculgHprS2YoGIfmJlctBqkUoBIf4xap3ov87LGt50KJR?=
+ =?us-ascii?Q?kDHLUHh0TyjzMS/5SrtZqosmQMEHL31ZTizVvscnFz3Bk0zhwxSepSsOBQ/o?=
+ =?us-ascii?Q?Dfz7Qp73hQnE41c3d9nVXVrIkqcqE/htrKYI3DHFkQwZ7I6yy7dcTnjlHTl8?=
+ =?us-ascii?Q?4U3iFmza0mI1zsMQEInI7FBZHZ2NI4FAcgWOsYPSvqrW+f8I1QfKOqTHMvwE?=
+ =?us-ascii?Q?2DgNS7FdlMuUnl0D1OffjnfzUKm2s+013zGoJ07z1Jg1iOpcupvXktrh0VED?=
+ =?us-ascii?Q?Xc1oI5eFxtDug/GZgnPzJMDtSb7lnRSkSOMocMt5Yl5qL+de1coGtt1NOgFr?=
+ =?us-ascii?Q?Eu12KTtME5FNlo3IJpVrgiuZxVrkmrn0LLpEDRCwCK9WNEbrh3xZPV77ZPX1?=
+ =?us-ascii?Q?KLyabkixxmhgsjX6KZa+cHc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PRASPRMB0004.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(19092799006)(376014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zYNPYUZCmPIuzcTE9PqseOjXG7FezB5l47WUm0OyeRT0u32lGpMD71/smNAO?=
+ =?us-ascii?Q?CRgioCdWiVXWQdfOQGteyvAOOTAVrHm+cvA84uk+B19NsQr78tc4a5WhY6mw?=
+ =?us-ascii?Q?jSYrVoQwDNHPMXCIT+jSzKi0gmh+Y7xxA6mtmRPXO+0LupKGJpUaDs4TSV4f?=
+ =?us-ascii?Q?6s0kwoICrKuF6XgzK8VWUYquSBf6Kfkh9gKtwqcS8sf0kby0RI2lCaeChSJD?=
+ =?us-ascii?Q?vdaFFnTWTt/xF8cUlzt2gCVyjw5Q2oT/K2rzVr5fZdeG7mePcbzNqJyNZ4y1?=
+ =?us-ascii?Q?oxwkAfEBBjFkCwJhQ+sk9I1Ehq7s+0fNLgkESm3jMz6qbsimw7zX1KnUSfM3?=
+ =?us-ascii?Q?zP4y1VoSnPSSSIRJi46QxDpCZpNIvODR5AJPoONWRI631gshMEn9Sf0Hxa1r?=
+ =?us-ascii?Q?pGaKZjK9ZHdpzPuKPLcq9lSE/JWkZNi2hcr2rdly8i6WzFngRhHEs8p+gsXp?=
+ =?us-ascii?Q?6TVemHh3EGOt8afvgw/0azInttsQUbu+rjOx6mFfg4OdC5ii2FlUwRxTXjUh?=
+ =?us-ascii?Q?GmfdU3JMrQ4GUjLM5uhLVg+ntE1AWIx9ec7IVpMngvdyiaTsTFsQuXnPjcA7?=
+ =?us-ascii?Q?Eb7JC482sPiNc5ZC2cg8ME7j1kZnfHqnYKtr5mbxIZjBK+V64KjmhQn6G1Sa?=
+ =?us-ascii?Q?Pac2jdLMdpZra95Z0heQvTZlMRcR0cg0BtdyOqbQSjlR2dMR7hCVSB1kWlez?=
+ =?us-ascii?Q?RwiqS9BYfhmrMXTRfwo30usyg84J3gaHwidvLoPjI38r1iaUjRJt12nIiWUJ?=
+ =?us-ascii?Q?4vr7pRwGEeF0NBlHMrgFwGZaWe7CqNYCfmFvt7G6Sk/4CDXGeLXEodqJwhOw?=
+ =?us-ascii?Q?MOhoal80OMfa8PIU/Z0haJ2uWnrMM8iypeuK/FYzPwLkBcKvSugC4EwLlDqM?=
+ =?us-ascii?Q?OY+p8cUfuLPXp36fKdZ/vU8JVZNWNLplwG/RjNYJVmbiGJh8ArF9FnmTl2D5?=
+ =?us-ascii?Q?yhrsGvn/YMGEfr8rFBL+TkYvGDeCHI0hAgbF9ScFrY8h3s6J3uuY4v7Zn73v?=
+ =?us-ascii?Q?YwFP52ezgmY6bIluBRHpeY+Z70TOpqcQM92x8XU2c7YQdjp0AfzuAdT9LQpg?=
+ =?us-ascii?Q?nGQucFoyTFxykjykWgdbEzqPi+L9sCuRtfFtSrMeP3MUmtDsEqH9EeS9HTRP?=
+ =?us-ascii?Q?y/8otkdgAnbHnIADah10LRTMCG5WzAyIEEaqBHzJjqKSNx5bmkZpQvvcjRdZ?=
+ =?us-ascii?Q?4Q43LrVm7RmUF9wE8/JrdF27tua8//LXw5Lft26+DZyltHzuhP4gHC+4qN6L?=
+ =?us-ascii?Q?ztWByTniJjUJOqGRjxRLjR1lUlcHSlIGnDgZfm7mEJ3y9g9Z7CsjfMDYaoGb?=
+ =?us-ascii?Q?EYfYVbZxFRiY935X5qf2WevJS+fA5URkiy1l8NV/nhLR3TtMtyfuO/KeFT44?=
+ =?us-ascii?Q?qKcm/XP98nAtBN1Boh9nMrt6uyQYMAOg5d2IKQshexwhGTQbbA0xA/QsO+HQ?=
+ =?us-ascii?Q?EmWiiYew1YcPMEwlgAIJk+Tr2O8owEWjSXaJoS55j3f6plnfKF5lUXwd4T94?=
+ =?us-ascii?Q?AjQX6CouMhpRepm6MtZGdMrl2SAmWU0JgM6drekO7tV73T2uJxTbhDsFKCzE?=
+ =?us-ascii?Q?eYXlYLYoatIY/nnbAHaRBqFfREprN+G/BzgvzWHLZJzXNeQirdZuUsQ6yKuX?=
+ =?us-ascii?Q?sJLfHQugqe0llamzs7sbGn5NvkTZ64XC552DWS4+bQWACYReV3C62gkskiY3?=
+ =?us-ascii?Q?xAa1IKH27fG+npHy1ACvf+96Mr8cl8DcFwcxh4YjDelzIEMm?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d7ff847-cf4a-44f5-8d6a-08de5775ec5a
+X-MS-Exchange-CrossTenant-AuthSource: PRASPRMB0004.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 16:15:12.3320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y15qCAbYzUWBPrBowSVxSIWHRF5kuEIXW3lrx9TH4UCNtLfefj98uLGicsSL5Z705BmkozTJdN2OiwZFxrWEgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6888
 
-On Mon, Jan 19, 2026 at 2:13=E2=80=AFPM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
+On Mon, Jan 19, 2026 at 06:02:26PM +0800, Sherry Sun wrote:
+> Update the fsl,imx6q-pcie.yaml to include the reset-gpios property in
+> the Root Port node.
 >
-> On 19.01.2026 13:26, Rafael J. Wysocki wrote:
-> > On Mon, Jan 19, 2026 at 11:01=E2=80=AFAM Marek Szyprowski
-> > <m.szyprowski@samsung.com> wrote:
-> >> On 18.01.2026 12:59, Rafael J. Wysocki wrote:
-> >>> On Sun, Jan 18, 2026 at 12:53=E2=80=AFPM Rafael J. Wysocki <rafael@ke=
-rnel.org> wrote:
-> >>>> On Sat, Jan 17, 2026 at 2:19=E2=80=AFAM Brian Norris <briannorris@ch=
-romium.org> wrote:
-> >>>>> On Thu, Jan 15, 2026 at 12:14:49PM +0100, Marek Szyprowski wrote:
-> >>>>>> On 14.01.2026 21:10, Brian Norris wrote:
-> >>>>>>> On Wed, Jan 14, 2026 at 10:46:41AM +0100, Marek Szyprowski wrote:
-> >>>>>>>> On 06.01.2026 23:27, Bjorn Helgaas wrote:
-> >>>>>>>>> On Thu, Oct 23, 2025 at 02:09:01PM -0700, Brian Norris wrote:
-> >>>>>>>>>> Today, it's possible for a PCI device to be created and
-> >>>>>>>>>> runtime-suspended before it is fully initialized. When that ha=
-ppens, the
-> >>>>>>>>>> device will remain in D0, but the suspend process may save an
-> >>>>>>>>>> intermediate version of that device's state -- for example, wi=
-thout
-> >>>>>>>>>> appropriate BAR configuration. When the device later resumes, =
-we'll
-> >>>>>>>>>> restore invalid PCI state and the device may not function.
-> >>>>>>>>>>
-> >>>>>>>>>> Prevent runtime suspend for PCI devices by deferring pm_runtim=
-e_enable()
-> >>>>>>>>>> until we've fully initialized the device.
-> >>>>>>> ...
-> >>>>>>>> This patch landed recently in linux-next as commit c796513dc54e
-> >>>>>>>> ("PCI/PM: Prevent runtime suspend until devices are fully initia=
-lized").
-> >>>>>>>> In my tests I found that it sometimes causes the "pci 0000:01:00=
-.0:
-> >>>>>>>> runtime PM trying to activate child device 0000:01:00.0 but pare=
-nt
-> >>>>>>>> (0000:00:00.0) is not active" warning on Qualcomm Robotics RB5 b=
-oard
-> >>>>>>>> (arch/arm64/boot/dts/qcom/qrb5165-rb5.dts). This in turn causes =
-a
-> >>>>>>>> lockdep warning about console lock, but this is just a consequen=
-ce of
-> >>>>>>>> the runtime pm warning. Reverting $subject patch on top of curre=
-nt
-> >>>>>>>> linux-next hides this warning.
-> >>>>>>>>
-> >>>>>>>> Here is a kernel log:
-> >>>>>>>>
-> >>>>>>>> pci 0000:01:00.0: [17cb:1101] type 00 class 0xff0000 PCIe Endpoi=
-nt
-> >>>>>>>> pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit]
-> >>>>>>>> pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
-> >>>>>>>> pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited b=
-y 5.0
-> >>>>>>>> GT/s PCIe x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8.=
-0 GT/s
-> >>>>>>>> PCIe x1 link)
-> >>>>>>>> pci 0000:01:00.0: Adding to iommu group 13
-> >>>>>>>> pci 0000:01:00.0: ASPM: default states L0s L1
-> >>>>>>>> pcieport 0000:00:00.0: bridge window [mem 0x60400000-0x604fffff]=
-: assigned
-> >>>>>>>> pci 0000:01:00.0: BAR 0 [mem 0x60400000-0x604fffff 64bit]: assig=
-ned
-> >>>>>>>> pci 0000:01:00.0: runtime PM trying to activate child device
-> >>>>>>>> 0000:01:00.0 but parent (0000:00:00.0) is not active
-> >>>>>>> Thanks for the report. I'll try to look at reproducing this, or a=
-t least
-> >>>>>>> getting a better mental model of exactly why this might fail (or,
-> >>>>>>> "warn") this way. But if you have the time and desire to try thin=
-gs out
-> >>>>>>> for me, can you give v1 a try?
-> >>>>>>>
-> >>>>>>> https://lore.kernel.org/all/20251016155335.1.I60a53c170a859666188=
-3bd2b4ef475155c7aa72b@changeid/
-> >>>>>>>
-> >>>>>>> I'm pretty sure it would not invoke the same problem.
-> >>>>>> Right, this one works fine.
-> >>>>>>
-> >>>>>>> I also suspect v3
-> >>>>>>> might not, but I'm less sure:
-> >>>>>>>
-> >>>>>>> https://lore.kernel.org/all/20251022141434.v3.1.I60a53c170a859666=
-1883bd2b4ef475155c7aa72b@changeid/
-> >>>>>> This one too, at least I was not able to reproduce any fail.
-> >>>>> Thanks for testing. I'm still not sure exactly how to reproduce you=
-r
-> >>>>> failure, but it seems as if the root port is being allowed to suspe=
-nd
-> >>>>> before the endpoint is added to the system, and it remains so while=
- the
-> >>>>> endpoint is about to probe. device_initial_probe() will be OK with
-> >>>>> respect to PM, since it will wake up the port if needed. But this
-> >>>>> particular code is not OK, since it doesn't ensure the parent devic=
-e is
-> >>>>> active while preparing the endpoint power state.
-> >>>>>
-> >>>>> I suppose one way to "solve" that is (untested):
-> >>>>>
-> >>>>> --- a/drivers/pci/bus.c
-> >>>>> +++ b/drivers/pci/bus.c
-> >>>>> @@ -380,8 +380,12 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >>>>>                   put_device(&pdev->dev);
-> >>>>>           }
-> >>>>>
-> >>>>> +       if (dev->dev.parent)
-> >>>>> +               pm_runtime_get_sync(dev->dev.parent);
-> >>>>>           pm_runtime_set_active(&dev->dev);
-> >>>>>           pm_runtime_enable(&dev->dev);
-> >>>>> +       if (dev->dev.parent)
-> >>>>> +               pm_runtime_put(dev->dev.parent);
-> >>>>>
-> >>>>>           if (!dn || of_device_is_available(dn))
-> >>>>>                   pci_dev_allow_binding(dev);
-> >>>>>
-> >>>>> Personally, I'm more inclined to go back to v1, since it prepares t=
-he
-> >>>>> runtime PM status when the device is first discovered. That way, it=
-s
-> >>>>> ancestors are still active, avoiding these sorts of problems. I'm
-> >>>>> frankly not sure of all the reasons Rafael recommended I make the
-> >>>>> v1->v3->v4 changes, and now that they cause problems, I'm inclined =
-to
-> >>>>> question them again.
-> >>>>>
-> >>>>> Rafael, do you have any thoughts?
-> >>>> Yeah.
-> >>>>
-> >>>> Move back pm_runtime_set_active(&dev->dev) back to pm_runtime_init()
-> >>> Or rather leave it there to be precise, but I think you know what I m=
-ean. :-)
-> >>>
-> >>>> because that would prevent the parent from suspending and keep
-> >>>> pm_runtime_enable() here because that would prevent the device itsel=
-f
-> >>>> from suspending between pm_runtime_init() and this place.
-> >>>>
-> >>>> And I would add comments in both places.
-> >> Confirmed, the following change (compared to $subject patch) fixed my =
-issue:
-> >>
-> >> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> >> index 3ef60c2fbd89..7e2b7e452d51 100644
-> >> --- a/drivers/pci/bus.c
-> >> +++ b/drivers/pci/bus.c
-> >> @@ -381,7 +381,6 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >>           }
-> >>
-> >>           pm_runtime_set_active(&dev->dev);
-> >> -       pm_runtime_enable(&dev->dev);
-> > That works too, but it would defeat the purpose of the original
-> > change, so I mean the other way around.
-> >
-> > That is, leave the pm_runtime_enable() here and move the
-> > pm_runtime_set_active() back to the other place.
->
-> Okay, I mixed that. This way it works too and fixes the observed issue.
->
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> There is already 'reset-gpios' property defined for PERST# in
+> pci-bus-common.yaml, so use that property instead of 'reset-gpio' in
+> this file, for backward compatibility, do not remove the existing
+> property in the bridge node, but mark them as 'deprecated' instead.
 
-Cool, thanks for verifying!
+
+Update fsl,imx6q-pcie.yaml to include the standard reset-gpios property
+for the Root Port node.
+
+The reset-gpios property is already defined in pci-bus-common.yaml for
+PERST#, so use it instead of the local reset-gpio property. Keep the
+existing reset-gpio property in the bridge node for backward
+compatibility, but mark it as deprecated.
+
+
+Frank
+>
+> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> ---
+>  .../bindings/pci/fsl,imx6q-pcie.yaml          | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> index 12a01f7a5744..74156b42e7a2 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -59,9 +59,12 @@ properties:
+>        - const: dma
+>
+>    reset-gpio:
+> +    deprecated: true
+>      description: Should specify the GPIO for controlling the PCI bus device
+>        reset signal. It's not polarity aware and defaults to active-low reset
+>        sequence (L=reset state, H=operation state) (optional required).
+> +      This property is deprecated, instead of referencing this property from the
+> +      host bridge node, use the reset-gpios property from the root port node.
+>
+>    reset-gpio-active-high:
+>      description: If present then the reset sequence using the GPIO
+> @@ -69,6 +72,18 @@ properties:
+>        L=operation state) (optional required).
+>      type: boolean
+>
+> +  pcie@0:
+> +    description:
+> +      Describe the i.MX6 PCIe Root Port.
+> +    type: object
+> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    unevaluatedProperties: false
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -229,6 +244,7 @@ unevaluatedProperties: false
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/imx6qdl-clock.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>
+>      pcie: pcie@1ffc000 {
+> @@ -255,5 +271,18 @@ examples:
+>                  <&clks IMX6QDL_CLK_LVDS1_GATE>,
+>                  <&clks IMX6QDL_CLK_PCIE_REF_125M>;
+>          clock-names = "pcie", "pcie_bus", "pcie_phy";
+> +
+> +        pcie_port0: pcie@0 {
+> +            compatible = "pciclass,0604";
+> +            device_type = "pci";
+> +            reg = <0x0 0x0 0x0 0x0 0x0>;
+> +            bus-range = <0x01 0xff>;
+> +
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            ranges;
+> +
+> +            reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+> +        };
+>      };
+>  ...
+> --
+> 2.37.1
+>
 
