@@ -1,238 +1,200 @@
-Return-Path: <linux-pci+bounces-45174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45176-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28F2CD3A8B9
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 13:28:08 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B0E8D3A9A5
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 13:57:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B027C30635D1
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 12:26:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F2157300349C
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 12:57:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F6C32570D;
-	Mon, 19 Jan 2026 12:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kk7RWiKB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC868361DBF;
+	Mon, 19 Jan 2026 12:57:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C42A3254AC
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 12:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41C32EBDD9;
+	Mon, 19 Jan 2026 12:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768825599; cv=none; b=taOn9P0rChFonJsWZHotrCM7hmAPGTmWR501TJdbK2CNAwbPiS1jyY6WrNQz6uJ1FS23NHPv3G4wA/bYwX/6d7Qa+B5bOJ+oiISRa+pv7QKjvFSZQLm3qdlDal9xKAKpbgs3BcB2wX2yc9HXY8J2rDYaoOqjKC/K3p4uF/kY+1o=
+	t=1768827460; cv=none; b=m8oaTUKmU+TvvG+HAaJThPbNGazEbrngb7qyK7QPvSEWDDtVylNZAZtkQCDK65WkS8emasS+KZUW0PrLKCS0xJuMPFi0JX3ZPNS/nAv3byJCmPAxldXnJkbW4rwCO0ZqHFIeHK/TLwd19xydVyR+RoyDwGdJjJvv2HYGETZR0Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768825599; c=relaxed/simple;
-	bh=SSIzOzaDE7//KmY5FNsdMbqnfiMffoRKHmOuNKGOaJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z47ULuT0e11gODBYprZayu1z6t0wtOAV+7A10T41vNE9aYW7zEcAG7HhCZKd4NfvTN0OoGkHqfUtHff6uUmUPNeM33GHAMGcmW31mHgrGJFprWf2E/rmuSqCviOvv7j7/6YjdH/vfPGsTudNM5cjgTluYuB48uqCMzkPEIWwxB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kk7RWiKB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3768C2BCB2
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 12:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768825598;
-	bh=SSIzOzaDE7//KmY5FNsdMbqnfiMffoRKHmOuNKGOaJo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kk7RWiKB7H/bDiQh5fEfb8KgwAvcFFVb/Gti6KuNeNjhuVHp0HQvVaspsQ9t8bPQL
-	 vlfZqM8ejjOTD9XcxRGSA7QZBids8ZeTZ1PUiutIB019yJrumMYah12rNKnIQlqW99
-	 0Q2p4wUPIJgi2KWchzfRNUIECvpZhwb95p11XwQHygnRNnlP+91UR9/qs6eAh4boiq
-	 dr/HPm3jpGa07bRuvtPAJyXP43W0eS4zJ57aSXJiATKDLMANcxi9tUSuVi5/yRg0WA
-	 0u5vECjD1CDdmqvg4SZatMM9pBFbKqcsnGGV5QWw+nxranDuG6WF4fme7/qK2/GiEt
-	 wdwXn8uLOEaiQ==
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-40444c41a70so2058571fac.1
-        for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 04:26:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV1UX5SedVBXIzLLHdBAjqfvGqkhxNs6uKnG9ud6qsXaTGImKeKt1bfFQO2t0WpilKWyOHZmVSIPjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz10x5lxguD7n3UE2S5GemTTmGRYGoD48oFe07ZyabpVTsiJ9+n
-	Itnd8VxYfqlKf/PWcpGXZvuhNlIKh9rcpEkuUhVUH1QWL8xNukej+mkAV8VMsWK5G/X7aJTmF9i
-	lZ0colMYy+ajP21MOT1rTjQxMLqF02ZI=
-X-Received: by 2002:a05:6820:488d:b0:65d:441:5fbc with SMTP id
- 006d021491bc7-66117a3736amr3743949eaf.79.1768825597715; Mon, 19 Jan 2026
- 04:26:37 -0800 (PST)
+	s=arc-20240116; t=1768827460; c=relaxed/simple;
+	bh=r2ff9uDL8xt8n0rYya4z5qBtNjY8LP95g1UfN4rnFqE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=CUR2irmwLtgESc8MZ0Z06OInxEtJvb7sZGHvY2aFaGMQ/cuhTCvq+aVHBSbZHEcXawY4XHQOWEd8kYYkKi198+B6U3Ke6sL4vlJ3gm9ua9X7PgXKQeihLnPuksDmSSXLY2PXD8mu38m6xdRQPh+kCLjkpjdOGOaNaSuWQoxYFjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr; spf=pass smtp.mailfrom=green-communications.fr; arc=none smtp.client-ip=212.227.17.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=green-communications.fr
+Received: from [192.168.0.66] ([88.171.60.104]) by mrelayeu.kundenserver.de
+ (mreue108 [213.165.67.119]) with ESMTPSA (Nemesis) id
+ 1N6KQZ-1vtGwY2aMb-00w7w0; Mon, 19 Jan 2026 13:51:43 +0100
+Message-ID: <87fb14ce-d708-414c-8b38-4195b7dd65a3@green-communications.fr>
+Date: Mon, 19 Jan 2026 13:51:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260106222715.GA381397@bhelgaas> <CGME20260114094643eucas1p1a2fdc6c35dd27741c18831b34bbed0c8@eucas1p1.samsung.com>
- <0e35a4e1-894a-47c1-9528-fc5ffbafd9e2@samsung.com> <aWf4KyTSIocWTmXw@google.com>
- <61e8c93c-d096-4807-b2dd-a22657f2e06a@samsung.com> <aWrjhqC_6I2UNXC5@google.com>
- <CAJZ5v0hWt63=0yjFrbTY8zXubh-Uc6ZwAndT73VL7itMkTe81A@mail.gmail.com>
- <CAJZ5v0gKZFWzuFT=cF_Ydjpro+sXzdeZ_+B4GEfiifa-cxpbGw@mail.gmail.com> <d2c006c3-44c3-4270-b1ca-5d1a0d7f4e09@samsung.com>
-In-Reply-To: <d2c006c3-44c3-4270-b1ca-5d1a0d7f4e09@samsung.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 19 Jan 2026 13:26:25 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0j=TM6DoGbW1agbiHUbq46G7pyd25E=ih2at7dvYr83Sg@mail.gmail.com>
-X-Gm-Features: AZwV_Qjr0d4ZRXuwqr_fC6lif0BGKq2UmHdyOHtiSe_Mso2lVi0z1WpKEY3FSh0
-Message-ID: <CAJZ5v0j=TM6DoGbW1agbiHUbq46G7pyd25E=ih2at7dvYr83Sg@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI/PM: Prevent runtime suspend before devices are
- fully initialized
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Brian Norris <briannorris@chromium.org>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-pm@vger.kernel.org, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, "Rob Herring (Arm)" <robh@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+ regressions@lists.linux.dev
+References: <a1d926f0-4cb5-4877-a4df-617902648d80@green-communications.fr>
+ <eb94b379-6e0b-4beb-aaa7-413a4e7f04b9@green-communications.fr>
+ <3780eb61-68e2-42ce-939e-7458cd3a63cb@green-communications.fr>
+ <20260116171048.GP961588@nvidia.com>
+Content-Language: en-US
+From: Nicolas Cavallari <Nicolas.Cavallari@green-communications.fr>
+Autocrypt: addr=Nicolas.Cavallari@green-communications.fr; keydata=
+ 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
+Subject: Re: [REGRESSION] Re: imx8 PCI regression since "iommu: Get DT/ACPI
+ parsing into the proper probe path"
+In-Reply-To: <20260116171048.GP961588@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:gOhvnN7z0uHCNgwQGGM9CIBM1Oz3un92068MxFN97zndh8SR9CX
+ IVySgViSQp9kfyE4gyZLmhHtfTvcByvw5XKHFUU91+b4AaSmk8UfKA1YXEhAOx9EWF3AQFy
+ d5/tQ+t9+F+UfAsQvH8KFSikCHokx9DPzqqhBvMFc8CZ7siK2OF5xiKdJ4am7OSzA7vimug
+ TxBH6gHAI8vEi50TcHDMg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xJo3KYuFO+8=;HRChcvNLxy8FiHXqL67U2fRPtSS
+ 9Ci+gjnzuA2JFi72dfbNTf6aL8vBnG0qXcdm8h9eeV6PNPZ9zErymei3fM4YGVooh8TI3EfUk
+ eY5qhJ7obVTDbX3q6GV4knbF/4LHGa5VAyWESActqIXWp3kFNGsHRb0cftEYPwQL3CvSxfJyr
+ hc1yMpoyMc+7RKwdFOLIAUQygSI19ubtLL0S5919zOs0IYFVRHRRAWfkRBranznfkHOlpn9XN
+ XQHtgJVhsshxAUs6d7G1KC0XmZftSOAsf5c/Oa9R3rpASOl0QLnNBQ/SZ4kQ5PS4hJy7jzwsk
+ 7nCr+oojPLojuHkkOrT1T0Y67k18uCUugR5/kOoTMcCGZ+V43oPVzwRNl844j1qrrel4s/QCq
+ RiRisnxztImwdd3q94T0Am5OvybaFGl0hN64wtE4KAEONkXvZi12ITQbo4r5FOstmkuH/nWpz
+ 9IKnGl7fu4Tn0uhqAYjetRkFqn86cCq8ERxFj6adK7+/zjIXsPv3pmko7hDrgLEJcq8+VV2NG
+ 2qgtLUPbjOeUbv0Q0AF1Yip8WQntGqA8laRB8OgGCFyxu4NNG2t6SPUuCZRBH5oOpJVuioHk+
+ fJagO28M/4RrROQRlTAvotSjIaHfWrcKkZ7igXRjFqyqlvPAVspoUchqXAl/56baj8dnZ5yP+
+ fKRUU7BLJsOBKuPsnvfZT3UgVyAI3Kx8CsmINrjtaWqo0zLy2J8p+Fu+bzcr38G0D4d3AUyWT
+ mDT3rXqKxH/MZNu7XFEu4i88BWcnS+eVcXZvqfsdGNNp53BXKhPattDz+u7BipybQFSvXnXeD
+ Gwt0aIMW0aT0z/a0Wbe7YPIx3EDz1r32KCSY82755mol3UA4hVnrsjE63NbF/Xr+O3i7ZOjs5
+ 8LAqSR/J6yRTUptTRj3lMt7ZsKEc8I0S8jQ/t4HNyumwB+tXQHbjK4tw1SyoLOn58YJtashgk
+ EO/PinpsaeTlRu9UkZxX1RNeNjDdp5Wzi6rCyh4HpWX5ikjZK5wFqt/l/AuZJiXW0gBEZLKf0
+ WPjxeskGAkGrR6tRkFy0ojtHP3JvkqvozpWG1gXTG1g0ZSMg9XCogDgTRz96AAwgt1XeDEUdO
+ 1GHzXGmg+S4WijICZYyQB9PMRtdMli3S2O08SHscUmalaP7fQJOicCk78ObMhevAr8qEm9ZMT
+ BkhZtOfqg/Qu14gIvc8XhP0VDgi4XOu3excuI3MpFZqtO2Au33XHB5JVm/BEZ8SxbLPRTjfCt
+ ZP/DwCkFMDWxMGSYS2F64RoLA0GPzCqxA54jbVb4ngLvIiE8n7Zww0MXi7hFTxAJbyCHuKwOG
+ LOPLKeENFKX5ZdYnnlLkDY/K4s0bsWPPN5tk6roLH75LGUAScmE+fDszJ9e1w2rLXTgXy3ygx
+ QqW3UOtJ8WwxVA+58hzg4avapdccZbWcpCN3T3+XwGVVGp8mHkczXVSrN85EXZjwvnEDwqcF+
+ Yy8aj7+Bd+bKjZjGkC9H4AaZ1i665nTf0JWT1Q5xrBk59L8Rf2tg0hp1x+AQQvlU9YOqN5+hR
+ FTLjW86g6E0l2pb9dHbUWC3bTyD+UPzLFBQ+fDHpM3hvF91l0QRw0j9kl6lmHqE6/uHrLMptk
+ MkvQdIYbuR1HWxQGBSVHxTaKfefCXGBGCAVHItAxtA9qk7XztZ67X4bejNejdyC4N2WyAjHf9
+ g6QJxLGjzq/U6VKrDBPD49z2fhYurEHY1U0dOegbfkPQYqhIjc4GIRVLRzhJ7EBlhF8HH3Ve1
+ GrqWFXwC3xJe8d2/bcRkzCk6RiEaYReutqma4tQatfN1AI4Mfk30f+8w=
 
-On Mon, Jan 19, 2026 at 11:01=E2=80=AFAM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> On 18.01.2026 12:59, Rafael J. Wysocki wrote:
-> > On Sun, Jan 18, 2026 at 12:53=E2=80=AFPM Rafael J. Wysocki <rafael@kern=
-el.org> wrote:
-> >> On Sat, Jan 17, 2026 at 2:19=E2=80=AFAM Brian Norris <briannorris@chro=
-mium.org> wrote:
-> >>> On Thu, Jan 15, 2026 at 12:14:49PM +0100, Marek Szyprowski wrote:
-> >>>> On 14.01.2026 21:10, Brian Norris wrote:
-> >>>>> On Wed, Jan 14, 2026 at 10:46:41AM +0100, Marek Szyprowski wrote:
-> >>>>>> On 06.01.2026 23:27, Bjorn Helgaas wrote:
-> >>>>>>> On Thu, Oct 23, 2025 at 02:09:01PM -0700, Brian Norris wrote:
-> >>>>>>>> Today, it's possible for a PCI device to be created and
-> >>>>>>>> runtime-suspended before it is fully initialized. When that happ=
-ens, the
-> >>>>>>>> device will remain in D0, but the suspend process may save an
-> >>>>>>>> intermediate version of that device's state -- for example, with=
-out
-> >>>>>>>> appropriate BAR configuration. When the device later resumes, we=
-'ll
-> >>>>>>>> restore invalid PCI state and the device may not function.
-> >>>>>>>>
-> >>>>>>>> Prevent runtime suspend for PCI devices by deferring pm_runtime_=
-enable()
-> >>>>>>>> until we've fully initialized the device.
-> >>>>> ...
-> >>>>>> This patch landed recently in linux-next as commit c796513dc54e
-> >>>>>> ("PCI/PM: Prevent runtime suspend until devices are fully initiali=
-zed").
-> >>>>>> In my tests I found that it sometimes causes the "pci 0000:01:00.0=
-:
-> >>>>>> runtime PM trying to activate child device 0000:01:00.0 but parent
-> >>>>>> (0000:00:00.0) is not active" warning on Qualcomm Robotics RB5 boa=
-rd
-> >>>>>> (arch/arm64/boot/dts/qcom/qrb5165-rb5.dts). This in turn causes a
-> >>>>>> lockdep warning about console lock, but this is just a consequence=
- of
-> >>>>>> the runtime pm warning. Reverting $subject patch on top of current
-> >>>>>> linux-next hides this warning.
-> >>>>>>
-> >>>>>> Here is a kernel log:
-> >>>>>>
-> >>>>>> pci 0000:01:00.0: [17cb:1101] type 00 class 0xff0000 PCIe Endpoint
-> >>>>>> pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit]
-> >>>>>> pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
-> >>>>>> pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by =
-5.0
-> >>>>>> GT/s PCIe x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8.0 =
-GT/s
-> >>>>>> PCIe x1 link)
-> >>>>>> pci 0000:01:00.0: Adding to iommu group 13
-> >>>>>> pci 0000:01:00.0: ASPM: default states L0s L1
-> >>>>>> pcieport 0000:00:00.0: bridge window [mem 0x60400000-0x604fffff]: =
-assigned
-> >>>>>> pci 0000:01:00.0: BAR 0 [mem 0x60400000-0x604fffff 64bit]: assigne=
-d
-> >>>>>> pci 0000:01:00.0: runtime PM trying to activate child device
-> >>>>>> 0000:01:00.0 but parent (0000:00:00.0) is not active
-> >>>>> Thanks for the report. I'll try to look at reproducing this, or at =
-least
-> >>>>> getting a better mental model of exactly why this might fail (or,
-> >>>>> "warn") this way. But if you have the time and desire to try things=
- out
-> >>>>> for me, can you give v1 a try?
-> >>>>>
-> >>>>> https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883b=
-d2b4ef475155c7aa72b@changeid/
-> >>>>>
-> >>>>> I'm pretty sure it would not invoke the same problem.
-> >>>> Right, this one works fine.
-> >>>>
-> >>>>> I also suspect v3
-> >>>>> might not, but I'm less sure:
-> >>>>>
-> >>>>> https://lore.kernel.org/all/20251022141434.v3.1.I60a53c170a85966618=
-83bd2b4ef475155c7aa72b@changeid/
-> >>>> This one too, at least I was not able to reproduce any fail.
-> >>> Thanks for testing. I'm still not sure exactly how to reproduce your
-> >>> failure, but it seems as if the root port is being allowed to suspend
-> >>> before the endpoint is added to the system, and it remains so while t=
-he
-> >>> endpoint is about to probe. device_initial_probe() will be OK with
-> >>> respect to PM, since it will wake up the port if needed. But this
-> >>> particular code is not OK, since it doesn't ensure the parent device =
-is
-> >>> active while preparing the endpoint power state.
-> >>>
-> >>> I suppose one way to "solve" that is (untested):
-> >>>
-> >>> --- a/drivers/pci/bus.c
-> >>> +++ b/drivers/pci/bus.c
-> >>> @@ -380,8 +380,12 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >>>                  put_device(&pdev->dev);
-> >>>          }
-> >>>
-> >>> +       if (dev->dev.parent)
-> >>> +               pm_runtime_get_sync(dev->dev.parent);
-> >>>          pm_runtime_set_active(&dev->dev);
-> >>>          pm_runtime_enable(&dev->dev);
-> >>> +       if (dev->dev.parent)
-> >>> +               pm_runtime_put(dev->dev.parent);
-> >>>
-> >>>          if (!dn || of_device_is_available(dn))
-> >>>                  pci_dev_allow_binding(dev);
-> >>>
-> >>> Personally, I'm more inclined to go back to v1, since it prepares the
-> >>> runtime PM status when the device is first discovered. That way, its
-> >>> ancestors are still active, avoiding these sorts of problems. I'm
-> >>> frankly not sure of all the reasons Rafael recommended I make the
-> >>> v1->v3->v4 changes, and now that they cause problems, I'm inclined to
-> >>> question them again.
-> >>>
-> >>> Rafael, do you have any thoughts?
-> >> Yeah.
-> >>
-> >> Move back pm_runtime_set_active(&dev->dev) back to pm_runtime_init()
-> > Or rather leave it there to be precise, but I think you know what I mea=
-n. :-)
-> >
-> >> because that would prevent the parent from suspending and keep
-> >> pm_runtime_enable() here because that would prevent the device itself
-> >> from suspending between pm_runtime_init() and this place.
-> >>
-> >> And I would add comments in both places.
->
-> Confirmed, the following change (compared to $subject patch) fixed my iss=
-ue:
->
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 3ef60c2fbd89..7e2b7e452d51 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -381,7 +381,6 @@ void pci_bus_add_device(struct pci_dev *dev)
->          }
->
->          pm_runtime_set_active(&dev->dev);
-> -       pm_runtime_enable(&dev->dev);
+Le 16/01/2026 à 18:10, Jason Gunthorpe a écrit :
+> On Fri, Jan 16, 2026 at 05:52:36PM +0100, Nicolas Cavallari wrote:
+>> I debugged it further, it seems to be mostly a PCI issue since the system
+>> does not actually have an IOMMU.
+>>
+>> When examining changes in the PCI configuration (lspci -vvvv), the main
+>> difference is that, with the patch, Access Control Services are enabled on
+>> the PCI switch.
+>>
+>>          Capabilities: [220 v1] Access Control Services
+>>                  ACSCap: SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+
+>> UpstreamFwd+ EgressCtrl+ DirectTrans+
+>> -               ACSCtl: SrcValid- TransBlk- ReqRedir- CmpltRedir-
+>> UpstreamFwd- EgressCtrl- DirectTrans-
+>> +               ACSCtl: SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+>> UpstreamFwd+ EgressCtrl- DirectTrans-
+>>
+>> If I manually patch the config space in sysfs and re-disable ACS on the port
+>> connected to the LAN7430, I cannot reproduce the problem.  In fact,
+>> disabling only ReqRedir is enough to work around the issue.
+> 
+> My guess would be your system has some kind of address alias going on?
+> 
+> Assuming you are not facing an errata, ACS generally changes the
+> routing of TLPs so if you have a DMA address that could go to two
+> different places then messing with ACS will give you different
+> behaviors.
+> 
+> In specific when you turn all those ACS settings you cannot do P2P
+> traffic anymore. If your system expects this for some reason then you
+> must use the kernel command line option to disable acs.
+> 
+> If you are just doing normal netdev stuff then it is doubtful that you
+> are doing P2P at all, so I might guess a bug in the microchip ethernet
+> driver doing a wild DMA? Stricter ACS settings cause it to AER and the
+> device cannot recover?
 
-That works too, but it would defeat the purpose of the original
-change, so I mean the other way around.
+Yes, i'm just running network throughput tests (iperf3) on eth1 while wlan0 is 
+idling, and those are the only two peripheral on the PCI bus. I don't think 
+there are anything unusual going on (P2P or vendor commands).
 
-That is, leave the pm_runtime_enable() here and move the
-pm_runtime_set_active() back to the other place.
+Bit it turns out there is an errata for the Pericom PI7C9X2G404 switch that 
+matches my problem, and there is already a workaround in the kernel, but it does 
+not match my PCI ids:
 
->
->          if (!dn || of_device_is_available(dn))
->                  pci_dev_allow_binding(dev);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index fae5a683cf87..22b897416025 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3201,6 +3201,7 @@ void pci_pm_init(struct pci_dev *dev)
->   poweron:
->          pci_pm_power_up_and_verify_state(dev);
->          pm_runtime_forbid(&dev->dev);
-> +       pm_runtime_enable(&dev->dev);
->   }
->
->   static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
+   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2404,
+                            pci_fixup_pericom_acs_store_forward);
+   DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2404,
+                            pci_fixup_pericom_acs_store_forward);
+   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2304,
+                            pci_fixup_pericom_acs_store_forward);
+   DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2304,
+                            pci_fixup_pericom_acs_store_forward);
+   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2303,
+                            pci_fixup_pericom_acs_store_forward);
+   DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2303,
+                            pci_fixup_pericom_acs_store_forward);
+
+While my device is 12d8:b404 and lspci still identifies it as PI7C9X2G404:
+
+01:00.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EV/SV PCIe2 
+4-Port/4-Lane Packet Switch [12d8:b404] (rev 01) (prog-if 00 [Normal decode])
+
+Adding this ID to the quirks.c list fixes the issue. I'll send a patch.
 
