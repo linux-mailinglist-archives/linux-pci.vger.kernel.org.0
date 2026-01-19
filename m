@@ -1,166 +1,238 @@
-Return-Path: <linux-pci+bounces-45173-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45174-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0B86D3A79E
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 12:59:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28F2CD3A8B9
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 13:28:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8E9FE3060597
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 11:57:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B027C30635D1
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 12:26:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A156931BC95;
-	Mon, 19 Jan 2026 11:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F6C32570D;
+	Mon, 19 Jan 2026 12:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iphJyRm9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kk7RWiKB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75A031B80B
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 11:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C42A3254AC
+	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 12:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768823833; cv=none; b=PJAmNWWuI9MZQaAPFSPWAfLHQUux24HwfM2poYeTiM3qvH3O0O9h9GWqRqA1KdFvROH1kfWCzOZfy9NagBrq5/lbWV3IsMVALzsaLqHVIQ3OkOjshSJpPfk5W5PIyDKPf0HfU0fqNmLaqrOvocjA67dfTZHgG4f/NzqU3o0OAH0=
+	t=1768825599; cv=none; b=taOn9P0rChFonJsWZHotrCM7hmAPGTmWR501TJdbK2CNAwbPiS1jyY6WrNQz6uJ1FS23NHPv3G4wA/bYwX/6d7Qa+B5bOJ+oiISRa+pv7QKjvFSZQLm3qdlDal9xKAKpbgs3BcB2wX2yc9HXY8J2rDYaoOqjKC/K3p4uF/kY+1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768823833; c=relaxed/simple;
-	bh=lN49dSWIXSzQVQ/AGceCiuBR2wnRoz/OfIwf9iCXlXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oeFvKryNOSj7FxBUkOKPLku+hGxMdvbWEuO4eESVHQETnl+mz48LnyIL/ga1F7Qhbt6LYZzuI/tTZsszr3gALGd5ScLHkov4d7TNfPiBg0xmL6JihAsx/fdpZJou/3/JyEJDhRp2x7pZLaKY/YD9F9mw1qpcaSeMDoe1rHrt6tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iphJyRm9; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42fb4eeb482so2272664f8f.0
-        for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 03:57:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768823830; x=1769428630; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rU5rVNMH9FwuytnsYY8KQix/3Ww8tOMfufmDlvcm95A=;
-        b=iphJyRm9MQ12u/fFaW4glSZ4FTpDK0y7Dyy4wgkB3/5YKCt0lLWIamzROXv7urDwft
-         7MAgAC94WfKPNItuSoGZW7dqV0JgP2VTWXvDaUVg3fK50fZwVEXCHQUXgak+V21fSUhO
-         1Ply2Vf/CRlcM9JGLCIm3frAjISjxENPR2IwT+eIXxpxAKpffIeJmdETCp5+uGSuEZQ9
-         XNz/9xCGEg3p5dzcA7bvUypsYNI/djWDPh8XEKL7pm3RRqbM9bsu5jcUNmkMZVReLXXn
-         DOPE0K9TsuFe5oBWqirNK1FPEAPHywsW+NcUgwVUFjBWoQhvdpk6Jk4hbYB0xik3c21s
-         Bj3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768823830; x=1769428630;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rU5rVNMH9FwuytnsYY8KQix/3Ww8tOMfufmDlvcm95A=;
-        b=YPlosUyDr0rVjVnu4yeBPxS+c3uNbwe0Nhx2mvljIHn2YZ0YuNWb9AdBrOYs5UrHz3
-         LSCNB78ttUwprp5CxAMLPxh4jDLorupoQ5BnqUNWVK3IjbmJpdm9KsRm+ZS2CGIWihNK
-         l9ROjgNi79qAUWFbCbcOZdnYmeMgWEFTAzrCVzMDNgERQ7WFv5Pfr72asap9TNOcFfa6
-         mVP3dZyt57IECnZJ63OPNPeHvru1uoa9xvtUOdVk4hWPinj7ZSyiXgg5ax2G+FWbE6w8
-         EiRUFjqq91CeUKchh1A9dlxbJTyKRTo82S4WRDma0qBG9N1+vHuMZG9oFN4fF5l8Nt/P
-         0u/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWSRMrEiUDtuFlEL9xNptxuKF/qceVtv17COP8srxSlmsmnKdgMZZqhA1GmnpQxjyBlq6apgJGAN84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl0iOs6JZPTFO+yTts9rmZHy06OCgeYzCBXGGEq7ypHnYJRJHA
-	b92kkecZLoz994RH6o7DZfPUVIC2+ROJ/VHekjySmYUHi8Y8J6Q0eMnt
-X-Gm-Gg: AZuq6aLIv9cPgOCGfPZdgZBqXTjwhhfyz3IAYmtVt4v8qgUyR5a4FnAeJYXnsXJ7Fpa
-	kgAQTne+SuVk63PVYYDKQA7rbarRENdiBGn4EQtCVaKwe5SMkpPe04q9ZE3X9XpVE7QAncOTtll
-	YicCXj4u3rgOJYe69gO4QVpwHC2zEA6jPEQ91NI5GSsZEC5J4Jo3sSlw6dMsfNq9RMxaVe9ldL1
-	wnpXaPLdzos/xqk+7z89icBPIThyhIPndL3Ua9KHBJPtN8Uu/Hit2CbA4/9oz40aKR4gl3RQRiH
-	mcptvtT8yLhoZBFqDqLqn3gPvfynHtzrk9Humb/OZlIbJSwIa93P7nM0elqJAs1Jy9NCXvZP93r
-	sisvMHPrufh8K6uY0BufD1OyADAZm4wEiBaySnSjrg1N3t2XzmFHGYL4sCJSqM7hkMa8lF0hf+z
-	o2l3qq99Wh2ARJV7GKZNIz08AZRlDM6naYXIUevkkt6PrD9RJ6GCHV+TqE/2NcmHeynRWnlk7Q+
-	O7G+6haTfUSNHrrfNdkU58bOFsx8CDSmWo0e7zwuZIzHg==
-X-Received: by 2002:a5d:5d03:0:b0:431:a50:6ead with SMTP id ffacd0b85a97d-4356a02c4e5mr12617439f8f.20.1768823829908;
-        Mon, 19 Jan 2026 03:57:09 -0800 (PST)
-Received: from ?IPV6:2003:f6:f71c:a900:884f:578f:4f43:4e3f? (p200300f6f71ca900884f578f4f434e3f.dip0.t-ipconnect.de. [2003:f6:f71c:a900:884f:578f:4f43:4e3f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43569927007sm22420038f8f.16.2026.01.19.03.56.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jan 2026 03:57:09 -0800 (PST)
-Message-ID: <a3e23d6c-8cbf-42be-8ca9-3fd68dca6998@gmail.com>
-Date: Mon, 19 Jan 2026 12:56:14 +0100
+	s=arc-20240116; t=1768825599; c=relaxed/simple;
+	bh=SSIzOzaDE7//KmY5FNsdMbqnfiMffoRKHmOuNKGOaJo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z47ULuT0e11gODBYprZayu1z6t0wtOAV+7A10T41vNE9aYW7zEcAG7HhCZKd4NfvTN0OoGkHqfUtHff6uUmUPNeM33GHAMGcmW31mHgrGJFprWf2E/rmuSqCviOvv7j7/6YjdH/vfPGsTudNM5cjgTluYuB48uqCMzkPEIWwxB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kk7RWiKB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3768C2BCB2
+	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 12:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768825598;
+	bh=SSIzOzaDE7//KmY5FNsdMbqnfiMffoRKHmOuNKGOaJo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kk7RWiKB7H/bDiQh5fEfb8KgwAvcFFVb/Gti6KuNeNjhuVHp0HQvVaspsQ9t8bPQL
+	 vlfZqM8ejjOTD9XcxRGSA7QZBids8ZeTZ1PUiutIB019yJrumMYah12rNKnIQlqW99
+	 0Q2p4wUPIJgi2KWchzfRNUIECvpZhwb95p11XwQHygnRNnlP+91UR9/qs6eAh4boiq
+	 dr/HPm3jpGa07bRuvtPAJyXP43W0eS4zJ57aSXJiATKDLMANcxi9tUSuVi5/yRg0WA
+	 0u5vECjD1CDdmqvg4SZatMM9pBFbKqcsnGGV5QWw+nxranDuG6WF4fme7/qK2/GiEt
+	 wdwXn8uLOEaiQ==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-40444c41a70so2058571fac.1
+        for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 04:26:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV1UX5SedVBXIzLLHdBAjqfvGqkhxNs6uKnG9ud6qsXaTGImKeKt1bfFQO2t0WpilKWyOHZmVSIPjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz10x5lxguD7n3UE2S5GemTTmGRYGoD48oFe07ZyabpVTsiJ9+n
+	Itnd8VxYfqlKf/PWcpGXZvuhNlIKh9rcpEkuUhVUH1QWL8xNukej+mkAV8VMsWK5G/X7aJTmF9i
+	lZ0colMYy+ajP21MOT1rTjQxMLqF02ZI=
+X-Received: by 2002:a05:6820:488d:b0:65d:441:5fbc with SMTP id
+ 006d021491bc7-66117a3736amr3743949eaf.79.1768825597715; Mon, 19 Jan 2026
+ 04:26:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/ACPI: Confine program_hpx_type2 to the AER bits
-To: Bjorn Helgaas <helgaas@kernel.org>, Haakon Bugge <haakon.bugge@oracle.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@suse.de>,
- Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Johannes Thumshirn <jth@kernel.org>, Myron Stowe <myron.stowe@redhat.com>
-References: <20260116211135.GA959225@bhelgaas>
-Content-Language: en-US
-From: Johannes Thumshirn <morbidrsa@gmail.com>
-In-Reply-To: <20260116211135.GA959225@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20260106222715.GA381397@bhelgaas> <CGME20260114094643eucas1p1a2fdc6c35dd27741c18831b34bbed0c8@eucas1p1.samsung.com>
+ <0e35a4e1-894a-47c1-9528-fc5ffbafd9e2@samsung.com> <aWf4KyTSIocWTmXw@google.com>
+ <61e8c93c-d096-4807-b2dd-a22657f2e06a@samsung.com> <aWrjhqC_6I2UNXC5@google.com>
+ <CAJZ5v0hWt63=0yjFrbTY8zXubh-Uc6ZwAndT73VL7itMkTe81A@mail.gmail.com>
+ <CAJZ5v0gKZFWzuFT=cF_Ydjpro+sXzdeZ_+B4GEfiifa-cxpbGw@mail.gmail.com> <d2c006c3-44c3-4270-b1ca-5d1a0d7f4e09@samsung.com>
+In-Reply-To: <d2c006c3-44c3-4270-b1ca-5d1a0d7f4e09@samsung.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 19 Jan 2026 13:26:25 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0j=TM6DoGbW1agbiHUbq46G7pyd25E=ih2at7dvYr83Sg@mail.gmail.com>
+X-Gm-Features: AZwV_Qjr0d4ZRXuwqr_fC6lif0BGKq2UmHdyOHtiSe_Mso2lVi0z1WpKEY3FSh0
+Message-ID: <CAJZ5v0j=TM6DoGbW1agbiHUbq46G7pyd25E=ih2at7dvYr83Sg@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI/PM: Prevent runtime suspend before devices are
+ fully initialized
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Brian Norris <briannorris@chromium.org>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-pm@vger.kernel.org, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/16/26 10:11 PM, Bjorn Helgaas wrote:
-> [+cc Johannes (author of e42010d8207f ("PCI: Set Read Completion
-> Boundary to 128 iff Root Port supports it (_HPX)"), Myron; start of
-> thread:
-> https://lore.kernel.org/r/20260113171522.3446407-1-haakon.bugge@oracle.com]
+On Mon, Jan 19, 2026 at 11:01=E2=80=AFAM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
-> On Fri, Jan 16, 2026 at 10:10:43AM +0000, Haakon Bugge wrote:
->>> On Thu, Jan 15, 2026 at 03:39:21PM +0000, Haakon Bugge wrote:
->>>> Thanks for the review, Bjørn!
->>>> ...
-> I should have mentioned this earlier, but I think the commit log
-> should include something about the problem this change fixes.  I
-> assume that the current code changes ExtTag and/or RO, and that causes
-> something bad.  That's what is motivating this change.
+> On 18.01.2026 12:59, Rafael J. Wysocki wrote:
+> > On Sun, Jan 18, 2026 at 12:53=E2=80=AFPM Rafael J. Wysocki <rafael@kern=
+el.org> wrote:
+> >> On Sat, Jan 17, 2026 at 2:19=E2=80=AFAM Brian Norris <briannorris@chro=
+mium.org> wrote:
+> >>> On Thu, Jan 15, 2026 at 12:14:49PM +0100, Marek Szyprowski wrote:
+> >>>> On 14.01.2026 21:10, Brian Norris wrote:
+> >>>>> On Wed, Jan 14, 2026 at 10:46:41AM +0100, Marek Szyprowski wrote:
+> >>>>>> On 06.01.2026 23:27, Bjorn Helgaas wrote:
+> >>>>>>> On Thu, Oct 23, 2025 at 02:09:01PM -0700, Brian Norris wrote:
+> >>>>>>>> Today, it's possible for a PCI device to be created and
+> >>>>>>>> runtime-suspended before it is fully initialized. When that happ=
+ens, the
+> >>>>>>>> device will remain in D0, but the suspend process may save an
+> >>>>>>>> intermediate version of that device's state -- for example, with=
+out
+> >>>>>>>> appropriate BAR configuration. When the device later resumes, we=
+'ll
+> >>>>>>>> restore invalid PCI state and the device may not function.
+> >>>>>>>>
+> >>>>>>>> Prevent runtime suspend for PCI devices by deferring pm_runtime_=
+enable()
+> >>>>>>>> until we've fully initialized the device.
+> >>>>> ...
+> >>>>>> This patch landed recently in linux-next as commit c796513dc54e
+> >>>>>> ("PCI/PM: Prevent runtime suspend until devices are fully initiali=
+zed").
+> >>>>>> In my tests I found that it sometimes causes the "pci 0000:01:00.0=
+:
+> >>>>>> runtime PM trying to activate child device 0000:01:00.0 but parent
+> >>>>>> (0000:00:00.0) is not active" warning on Qualcomm Robotics RB5 boa=
+rd
+> >>>>>> (arch/arm64/boot/dts/qcom/qrb5165-rb5.dts). This in turn causes a
+> >>>>>> lockdep warning about console lock, but this is just a consequence=
+ of
+> >>>>>> the runtime pm warning. Reverting $subject patch on top of current
+> >>>>>> linux-next hides this warning.
+> >>>>>>
+> >>>>>> Here is a kernel log:
+> >>>>>>
+> >>>>>> pci 0000:01:00.0: [17cb:1101] type 00 class 0xff0000 PCIe Endpoint
+> >>>>>> pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit]
+> >>>>>> pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+> >>>>>> pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by =
+5.0
+> >>>>>> GT/s PCIe x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8.0 =
+GT/s
+> >>>>>> PCIe x1 link)
+> >>>>>> pci 0000:01:00.0: Adding to iommu group 13
+> >>>>>> pci 0000:01:00.0: ASPM: default states L0s L1
+> >>>>>> pcieport 0000:00:00.0: bridge window [mem 0x60400000-0x604fffff]: =
+assigned
+> >>>>>> pci 0000:01:00.0: BAR 0 [mem 0x60400000-0x604fffff 64bit]: assigne=
+d
+> >>>>>> pci 0000:01:00.0: runtime PM trying to activate child device
+> >>>>>> 0000:01:00.0 but parent (0000:00:00.0) is not active
+> >>>>> Thanks for the report. I'll try to look at reproducing this, or at =
+least
+> >>>>> getting a better mental model of exactly why this might fail (or,
+> >>>>> "warn") this way. But if you have the time and desire to try things=
+ out
+> >>>>> for me, can you give v1 a try?
+> >>>>>
+> >>>>> https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883b=
+d2b4ef475155c7aa72b@changeid/
+> >>>>>
+> >>>>> I'm pretty sure it would not invoke the same problem.
+> >>>> Right, this one works fine.
+> >>>>
+> >>>>> I also suspect v3
+> >>>>> might not, but I'm less sure:
+> >>>>>
+> >>>>> https://lore.kernel.org/all/20251022141434.v3.1.I60a53c170a85966618=
+83bd2b4ef475155c7aa72b@changeid/
+> >>>> This one too, at least I was not able to reproduce any fail.
+> >>> Thanks for testing. I'm still not sure exactly how to reproduce your
+> >>> failure, but it seems as if the root port is being allowed to suspend
+> >>> before the endpoint is added to the system, and it remains so while t=
+he
+> >>> endpoint is about to probe. device_initial_probe() will be OK with
+> >>> respect to PM, since it will wake up the port if needed. But this
+> >>> particular code is not OK, since it doesn't ensure the parent device =
+is
+> >>> active while preparing the endpoint power state.
+> >>>
+> >>> I suppose one way to "solve" that is (untested):
+> >>>
+> >>> --- a/drivers/pci/bus.c
+> >>> +++ b/drivers/pci/bus.c
+> >>> @@ -380,8 +380,12 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >>>                  put_device(&pdev->dev);
+> >>>          }
+> >>>
+> >>> +       if (dev->dev.parent)
+> >>> +               pm_runtime_get_sync(dev->dev.parent);
+> >>>          pm_runtime_set_active(&dev->dev);
+> >>>          pm_runtime_enable(&dev->dev);
+> >>> +       if (dev->dev.parent)
+> >>> +               pm_runtime_put(dev->dev.parent);
+> >>>
+> >>>          if (!dn || of_device_is_available(dn))
+> >>>                  pci_dev_allow_binding(dev);
+> >>>
+> >>> Personally, I'm more inclined to go back to v1, since it prepares the
+> >>> runtime PM status when the device is first discovered. That way, its
+> >>> ancestors are still active, avoiding these sorts of problems. I'm
+> >>> frankly not sure of all the reasons Rafael recommended I make the
+> >>> v1->v3->v4 changes, and now that they cause problems, I'm inclined to
+> >>> question them again.
+> >>>
+> >>> Rafael, do you have any thoughts?
+> >> Yeah.
+> >>
+> >> Move back pm_runtime_set_active(&dev->dev) back to pm_runtime_init()
+> > Or rather leave it there to be precise, but I think you know what I mea=
+n. :-)
+> >
+> >> because that would prevent the parent from suspending and keep
+> >> pm_runtime_enable() here because that would prevent the device itself
+> >> from suspending between pm_runtime_init() and this place.
+> >>
+> >> And I would add comments in both places.
 >
->>>>>> if (pcie_cap_has_lnkctl(dev)) {
->>>>>> + u16 lnkctl;
->>>>>>
->>>>>> - /*
->>>>>> -  * If the Root Port supports Read Completion Boundary of
->>>>>> -  * 128, set RCB to 128.  Otherwise, clear it.
->>>>>> -  */
->>>>>> - hpx->pci_exp_lnkctl_and |= PCI_EXP_LNKCTL_RCB;
->>>>>> - hpx->pci_exp_lnkctl_or &= ~PCI_EXP_LNKCTL_RCB;
->>>>>> - if (pcie_root_rcb_set(dev))
->>>>>> - hpx->pci_exp_lnkctl_or |= PCI_EXP_LNKCTL_RCB;
->>>>>> -
->>>>>> - pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
->>>>>> - ~hpx->pci_exp_lnkctl_and, hpx->pci_exp_lnkctl_or);
->>>>>> + pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
->>>>>> + if (lnkctl)
->>>>>> + pci_warn(dev, "Some bits in PCIe Link Control are set: 0x%04x\n",
->>>>>> +  lnkctl);
->>>>>>
->>>>> Sorry, I wasn't clear about this.  I meant that we could log the
->>>>> LNKCTL AND/OR values from _HPX, not the values from
->>>>> PCI_EXP_LNKCTL itself.  There will definitely be bits set in
->>>>> PCI_EXP_LNKCTL in normal operation, which is perfectly fine.
->>>>>
->>>>> But if pci_exp_lnkctl_and or pci_exp_lnkctl_or are non-zero, the
->>>>> platform is telling us to do something, and we're ignoring it.
->>>>> *That's* what I think we might want to know about.  pci_info()
->>>>> is probably sufficient; the user doesn't need to *do* anything
->>>>> with it, I just want it in case we need to debug an issue.
->>>> My bad, Yes, that makes more sense to me. And, you're OK with
->>>> removing the RCB tweaking as well?
->>> Good question.  My hope is that the code here is just to make sure
->>> that we don't *clear* PCI_EXP_LNKCTL_RCB when we want it set but a
->>> type 2 record might clear it by mistake.
->> Commit e42010d8207f ("PCI: Set Read Completion Boundary to 128 iff
->> Root Port supports it (_HPX)") fixes the "opposite" case, where _HPX
->> sets the RCB even though the RC does not support it. That commit
->> removes any RCB setting from the type 2 record from the equation,
->> and sets RCB if the RC has the bit set. And to me, that seems to be
->> the correct behaviour.
-> Thanks for digging into that.  You're right that it looks like
-> e42010d8207f ("PCI: Set Read Completion Boundary to 128 iff Root Port
-> supports it (_HPX)") was motivated by a machine with a Root Port with
-> PCI_EXP_LNKCTL_RCB cleared, but an _HPX record telling us to set
-> PCI_EXP_LNKCTL_RCB.
+> Confirmed, the following change (compared to $subject patch) fixed my iss=
+ue:
+>
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 3ef60c2fbd89..7e2b7e452d51 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -381,7 +381,6 @@ void pci_bus_add_device(struct pci_dev *dev)
+>          }
+>
+>          pm_runtime_set_active(&dev->dev);
+> -       pm_runtime_enable(&dev->dev);
 
-IIRC (this is nearly 10 years old) that's been the case. But back then 
-it clearly was a bios issue, but we decided to fix it in the kernel if 
-my memory serves me well.
+That works too, but it would defeat the purpose of the original
+change, so I mean the other way around.
 
+That is, leave the pm_runtime_enable() here and move the
+pm_runtime_set_active() back to the other place.
+
+>
+>          if (!dn || of_device_is_available(dn))
+>                  pci_dev_allow_binding(dev);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index fae5a683cf87..22b897416025 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3201,6 +3201,7 @@ void pci_pm_init(struct pci_dev *dev)
+>   poweron:
+>          pci_pm_power_up_and_verify_state(dev);
+>          pm_runtime_forbid(&dev->dev);
+> +       pm_runtime_enable(&dev->dev);
+>   }
+>
+>   static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
 
