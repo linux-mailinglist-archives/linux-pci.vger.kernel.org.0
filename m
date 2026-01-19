@@ -1,113 +1,88 @@
-Return-Path: <linux-pci+bounces-45148-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45149-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44731D39B9D
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 01:18:05 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31001D39C6D
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 03:39:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 49C3D300B6B2
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 00:17:56 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2CBAF30012CE
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 02:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFB4A1DDC1B;
-	Mon, 19 Jan 2026 00:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7BA223D7E3;
+	Mon, 19 Jan 2026 02:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="AvtEY6TZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R/oIuiWc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4517E105
-	for <linux-pci@vger.kernel.org>; Mon, 19 Jan 2026 00:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406F824A046;
+	Mon, 19 Jan 2026 02:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768781871; cv=none; b=jRPUvO/3UXfjSYOloCJtYZfB0SA5Tbn0cRMtAQqxZdN3mUU0Al86t0c/Z8aplqOCdktWDK/or6+5JxMJgeEMvDLvdAAYRTwb90czNXYws/kiCajhb6XcPUEtdGW8eo51R3QIccPRaQu4gE5ihnwF5/CpV5EM6IXdvoN2HkpdujI=
+	t=1768790347; cv=none; b=PCKIwOwS9TJlzMelfQfIrzkeWyUakHqR+IREZBhkyyYIpBaj6knH8wLFdkGZGG7cKb4EaCu3Q65ea3XQL1+ATonOwoJHo0mXGWddAn0ZewgXgaI0yqtMMiz/oPm+ckqee7FLzRad3Qd5+BJ1fo5lM7jrbqezAXn7Z/YFbPbw9k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768781871; c=relaxed/simple;
-	bh=Vdj5DilSJk/GkiFkS400ufZmrLLzmhGDRSY4F2QVISs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FKBQC5b6OkFkMmUg2LMcgfiViXUiFlneN/8BxiTQrF599hr5tYtkYpP3kIkRXXwFtPhpN8910rCz8luSvLcqHLrU3i0DrqbODTygLpPiRXvYF8GfiQZgqsr800bBMskTIXPoQlNeTAPUoJ1c3C1HcCwKP0YIw23wp9jy45uDCg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=AvtEY6TZ; arc=none smtp.client-ip=113.46.200.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=LPEjpVdluDBTwkEbzRKlodD7+GjZDmickKMQYGpf+ks=;
-	b=AvtEY6TZzMD1gHtVP3Q9Xo7o7ObeRhuiJlEuibdc1pt6dNKYwnD6eQUiZnlkBTEXnXjUG0hES
-	wnP6EqlTQnO4Uxmx1/W+Yf94QM3nkLmlPkjOoD/fBYYXBS28rSJahQhy7JZOHhOkN+5IrciudEc
-	miHuiWeKzcg49ZG38MGMeI8=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4dvWCr5B0nzmV7m;
-	Mon, 19 Jan 2026 08:14:16 +0800 (CST)
-Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id B136B40565;
-	Mon, 19 Jan 2026 08:17:39 +0800 (CST)
-Received: from [10.67.121.161] (10.67.121.161) by
- kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 19 Jan 2026 08:17:39 +0800
-Message-ID: <60b34308-36cf-45f4-b493-42d97562e3b9@huawei.com>
-Date: Mon, 19 Jan 2026 08:17:38 +0800
+	s=arc-20240116; t=1768790347; c=relaxed/simple;
+	bh=sdMleTLpQANshSTk1fuirSrLsZLtb8pFq+98lNyNt9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jMZarwSWUxQ9TLx781Dvc3d0Ego8grrqlktHGxYJdE9KnQV22Pbfaabh7Ch06ikqg9ZfFhzqbVgIEvgZgwrcH828EHO3ugFoYpPcp6D3LurR+PlbxxZj6ZkVxjsEgC5baMsJTLVRh2Y2rRwtnWydMZUbaWgLuFXVeVtflN0W4Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R/oIuiWc; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768790346; x=1800326346;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sdMleTLpQANshSTk1fuirSrLsZLtb8pFq+98lNyNt9E=;
+  b=R/oIuiWcLJLYMDdwJflQTPwq47LhusoRzvtT4yCD2184NRNH2Z7FyBH3
+   YpZs+WgpDtqFYVMMSZTTdTfoMYwmqsJhgVGtuU+rUZ9pJRdXyI0jJkOQn
+   JHRpQ1+7W4tDUDlwUIs68kgeEufsnvtfUL+36Q14C2PbUM/tAyQfHsJi4
+   iEHJmubzfPjGtKyfQCPyict2DPoPtscEtlrG9gbdf+tXFxB/UMJy5WaqQ
+   7biyfdQ4e5w7W1WFwX3iSbmMU4MzNn4iOyTRnln0HH93QTtbQArFI+B5U
+   VpFYOp+Bqbvjk4S/YKa8TGYMjirrPjSaLyp4FzasR9CG01tbGjy0iyddX
+   g==;
+X-CSE-ConnectionGUID: vTrXwuLpRO+d7TOHQRDPEw==
+X-CSE-MsgGUID: c2NwmfJ7Ti2Lc6dNxXJzLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="81113489"
+X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
+   d="scan'208";a="81113489"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 18:39:05 -0800
+X-CSE-ConnectionGUID: FzvMluOgSpWMu33VAV1bZA==
+X-CSE-MsgGUID: kTS9VI7pTZutZAQUx/FyBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
+   d="scan'208";a="236437867"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa002.jf.intel.com with ESMTP; 18 Jan 2026 18:39:02 -0800
+Date: Mon, 19 Jan 2026 10:21:19 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Li Ming <ming.li@zohomail.com>
+Cc: helgaas@kernel.org, dan.j.williams@intel.com, linux-pci@vger.kernel.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] PCI/IDE: Fix using wrong VF ID for RID range
+ calculation
+Message-ID: <aW2VH/CJQY7384jw@yilunxu-OptiPlex-7050>
+References: <20260114111455.550984-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: RFC about how to obtain PCIE TPH steer-tag on ARM64 platform
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Wei <wei.huang2@amd.com>,
-	<Eric.VanTassell@amd.com>, <bhelgaas@google.com>,
-	<jonathan.cameron@huawei.com>, <wangzhou1@hisilicon.com>,
-	<wanghuiqiang@huawei.com>, <liuyonglong@huawei.com>
-References: <20260116193203.GA959102@bhelgaas>
-Content-Language: en-US
-From: fengchengwen <fengchengwen@huawei.com>
-In-Reply-To: <20260116193203.GA959102@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk500009.china.huawei.com (7.202.194.94)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260114111455.550984-1-ming.li@zohomail.com>
 
-On 1/17/2026 3:32 AM, Bjorn Helgaas wrote:
-> On Fri, Jan 16, 2026 at 08:21:30AM +0800, fengchengwen wrote:
->> On 1/15/2026 1:03 AM, Bjorn Helgaas wrote:
->>> On Wed, Jan 14, 2026 at 11:39:27AM +0800, fengchengwen wrote:
->>>> On 1/14/2026 3:07 AM, Bjorn Helgaas wrote:
->>>>> On Mon, Jan 12, 2026 at 11:01:31AM +0800, fengchengwen wrote:
->>>>>> Hi all,
->>>>>>
->>>>>> We want to enable PCIE TPH feature on ARM64 platform, but we encounter the
->>>>>> following problem:
->>>>>>
->>>>>> 1. The pcie_tph_get_cpu_st() function invokes the ACPI DSM method to
->>>>>>    obtain the steer-tag of the CPU. According to the definition of
->>>>>>    the DSM method [1], the cpu_uid should be "ACPI processor uid".
->>>>>
->>>>>> 2. In the current implementation, the ACPI DSM method is invoked
->>>>>>    directly using the logical core number, which works on the x86
->>>>>>    platform but does not work on the ARM64 platform because the
->>>>>>    logical core ID is not the same as the ACPI processor ID when the
->>>>>>    PG exists.
->>>>>
->>>>> PG?
->>>>
->>>> partial good
->>>
->>> I still don't know what "partial good" means :)  Is that something
->>> from a spec?
->>
->> Because of some issues (like manufacturing variances), certain circuits
->> (e.g., some cores) might not work normally. For these cases, we can use
->> the part at a reduced specification, which is the PG mentioned here.
+On Wed, Jan 14, 2026 at 07:14:55PM +0800, Li Ming wrote:
+> When allocate a new IDE stream for a PCI device in SR-IOV case, the RID
+> range of the new IDE stream should cover all VFs of the device. VF ID
+> range of a PCI device is [0, num_VFs - 1], so should use (num_VFs - 1)
+> as the last VF's ID.
 > 
-> Ah, got it :)  If you go this direction, maybe you can expand that
-> part of the commit log a bit, since I don't think "PG" or "partial
-> good" is a widely-known term.
+> Fixes: 1e4d2ff3ae45 ("PCI/IDE: Add IDE establishment helpers")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-Alright, thank you for the reminder.
-
-> 
-
+Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
 
