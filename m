@@ -1,37 +1,37 @@
-Return-Path: <linux-pci+bounces-45176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45175-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B0E8D3A9A5
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 13:57:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20B44D3A984
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 13:53:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F2157300349C
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 12:57:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CAAE53005E85
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jan 2026 12:53:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC868361DBF;
-	Mon, 19 Jan 2026 12:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B1A35C1B4;
+	Mon, 19 Jan 2026 12:53:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41C32EBDD9;
-	Mon, 19 Jan 2026 12:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A0A35A95D;
+	Mon, 19 Jan 2026 12:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768827460; cv=none; b=m8oaTUKmU+TvvG+HAaJThPbNGazEbrngb7qyK7QPvSEWDDtVylNZAZtkQCDK65WkS8emasS+KZUW0PrLKCS0xJuMPFi0JX3ZPNS/nAv3byJCmPAxldXnJkbW4rwCO0ZqHFIeHK/TLwd19xydVyR+RoyDwGdJjJvv2HYGETZR0Nk=
+	t=1768827193; cv=none; b=tC/HyW7kgA0Mx/W/9ZxSfJStznI66ZtyZGIv1yU3CFKZbDq2Jps/uWW51qLcww6izDYp9SI03XfUnwAPBqa/lOWTY19XfUnJox/UwRUAgohGBbkbSjl4gMaxNAGcXr9u+EeE6102oF/76wFQjcA02Y7exBPpqqKquGWk1t2tJlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768827460; c=relaxed/simple;
-	bh=r2ff9uDL8xt8n0rYya4z5qBtNjY8LP95g1UfN4rnFqE=;
+	s=arc-20240116; t=1768827193; c=relaxed/simple;
+	bh=cGzPxUmaEhFMDDElzlC+0Cv5UBY7+PeNviT+AavSgPM=;
 	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=CUR2irmwLtgESc8MZ0Z06OInxEtJvb7sZGHvY2aFaGMQ/cuhTCvq+aVHBSbZHEcXawY4XHQOWEd8kYYkKi198+B6U3Ke6sL4vlJ3gm9ua9X7PgXKQeihLnPuksDmSSXLY2PXD8mu38m6xdRQPh+kCLjkpjdOGOaNaSuWQoxYFjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr; spf=pass smtp.mailfrom=green-communications.fr; arc=none smtp.client-ip=212.227.17.10
+	 In-Reply-To:Content-Type; b=XBy6lM7v3xJ0xJpMYMM6NT+KDEG/F1FpeD4+fdrhVa5dfM23+kr1PTCAWxp3PAlgZLnwM/cy9JH5Gak4z8+nxfsUK+7q19696Do4/8X7fBxmYdGzS9Tk/FhtRvarN5bRUqvOjee9bEh6AaZ7U9OlAouFB7VF7Lmp9xCJ91V6TlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr; spf=pass smtp.mailfrom=green-communications.fr; arc=none smtp.client-ip=217.72.192.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=green-communications.fr
 Received: from [192.168.0.66] ([88.171.60.104]) by mrelayeu.kundenserver.de
- (mreue108 [213.165.67.119]) with ESMTPSA (Nemesis) id
- 1N6KQZ-1vtGwY2aMb-00w7w0; Mon, 19 Jan 2026 13:51:43 +0100
-Message-ID: <87fb14ce-d708-414c-8b38-4195b7dd65a3@green-communications.fr>
-Date: Mon, 19 Jan 2026 13:51:42 +0100
+ (mreue106 [213.165.67.119]) with ESMTPSA (Nemesis) id
+ 1M3lLh-1vhXll1nPv-00BvaZ; Mon, 19 Jan 2026 13:53:02 +0100
+Message-ID: <154d0ccb-00d8-4e7b-ab6e-c798c86c5e96@green-communications.fr>
+Date: Mon, 19 Jan 2026 13:53:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -39,17 +39,16 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: iommu@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, "Rob Herring (Arm)" <robh@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Joerg Roedel <joro@8bytes.org>,
- regressions@lists.linux.dev
+To: Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rob Herring (Arm)"
+ <robh@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Jason Gunthorpe <jgg@nvidia.com>, regressions@lists.linux.dev
 References: <a1d926f0-4cb5-4877-a4df-617902648d80@green-communications.fr>
  <eb94b379-6e0b-4beb-aaa7-413a4e7f04b9@green-communications.fr>
  <3780eb61-68e2-42ce-939e-7458cd3a63cb@green-communications.fr>
- <20260116171048.GP961588@nvidia.com>
+ <4da29d46-9a80-4ec4-b6b8-6c9457eed481@arm.com>
 Content-Language: en-US
 From: Nicolas Cavallari <Nicolas.Cavallari@green-communications.fr>
 Autocrypt: addr=Nicolas.Cavallari@green-communications.fr; keydata=
@@ -98,103 +97,138 @@ Autocrypt: addr=Nicolas.Cavallari@green-communications.fr; keydata=
  XMjIkcCihY9vSksnm5C7d6wGxy2/Mju8s0J1tRaXkjbj
 Subject: Re: [REGRESSION] Re: imx8 PCI regression since "iommu: Get DT/ACPI
  parsing into the proper probe path"
-In-Reply-To: <20260116171048.GP961588@nvidia.com>
+In-Reply-To: <4da29d46-9a80-4ec4-b6b8-6c9457eed481@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:gOhvnN7z0uHCNgwQGGM9CIBM1Oz3un92068MxFN97zndh8SR9CX
- IVySgViSQp9kfyE4gyZLmhHtfTvcByvw5XKHFUU91+b4AaSmk8UfKA1YXEhAOx9EWF3AQFy
- d5/tQ+t9+F+UfAsQvH8KFSikCHokx9DPzqqhBvMFc8CZ7siK2OF5xiKdJ4am7OSzA7vimug
- TxBH6gHAI8vEi50TcHDMg==
+X-Provags-ID: V03:K1:qvKrgniDhCDttoq4hx/KpwZ7wvT16Hg+QjDEhqguqFoZvTWbYYU
+ TAdm6qt5OYVkrkzIV5BNU900bXM0nA2ibuHysJmVsMFcS3Dg0a4BXevHAaml5stE7+brjh3
+ G4BzfnZqu694rkvzCdqJNoOeJi8QMlhuL9ygtzBVxeOTgA/J20A8OqLub9ESDr49En8OwaK
+ +/xqqWg7onaVG+Ll/CRpQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:xJo3KYuFO+8=;HRChcvNLxy8FiHXqL67U2fRPtSS
- 9Ci+gjnzuA2JFi72dfbNTf6aL8vBnG0qXcdm8h9eeV6PNPZ9zErymei3fM4YGVooh8TI3EfUk
- eY5qhJ7obVTDbX3q6GV4knbF/4LHGa5VAyWESActqIXWp3kFNGsHRb0cftEYPwQL3CvSxfJyr
- hc1yMpoyMc+7RKwdFOLIAUQygSI19ubtLL0S5919zOs0IYFVRHRRAWfkRBranznfkHOlpn9XN
- XQHtgJVhsshxAUs6d7G1KC0XmZftSOAsf5c/Oa9R3rpASOl0QLnNBQ/SZ4kQ5PS4hJy7jzwsk
- 7nCr+oojPLojuHkkOrT1T0Y67k18uCUugR5/kOoTMcCGZ+V43oPVzwRNl844j1qrrel4s/QCq
- RiRisnxztImwdd3q94T0Am5OvybaFGl0hN64wtE4KAEONkXvZi12ITQbo4r5FOstmkuH/nWpz
- 9IKnGl7fu4Tn0uhqAYjetRkFqn86cCq8ERxFj6adK7+/zjIXsPv3pmko7hDrgLEJcq8+VV2NG
- 2qgtLUPbjOeUbv0Q0AF1Yip8WQntGqA8laRB8OgGCFyxu4NNG2t6SPUuCZRBH5oOpJVuioHk+
- fJagO28M/4RrROQRlTAvotSjIaHfWrcKkZ7igXRjFqyqlvPAVspoUchqXAl/56baj8dnZ5yP+
- fKRUU7BLJsOBKuPsnvfZT3UgVyAI3Kx8CsmINrjtaWqo0zLy2J8p+Fu+bzcr38G0D4d3AUyWT
- mDT3rXqKxH/MZNu7XFEu4i88BWcnS+eVcXZvqfsdGNNp53BXKhPattDz+u7BipybQFSvXnXeD
- Gwt0aIMW0aT0z/a0Wbe7YPIx3EDz1r32KCSY82755mol3UA4hVnrsjE63NbF/Xr+O3i7ZOjs5
- 8LAqSR/J6yRTUptTRj3lMt7ZsKEc8I0S8jQ/t4HNyumwB+tXQHbjK4tw1SyoLOn58YJtashgk
- EO/PinpsaeTlRu9UkZxX1RNeNjDdp5Wzi6rCyh4HpWX5ikjZK5wFqt/l/AuZJiXW0gBEZLKf0
- WPjxeskGAkGrR6tRkFy0ojtHP3JvkqvozpWG1gXTG1g0ZSMg9XCogDgTRz96AAwgt1XeDEUdO
- 1GHzXGmg+S4WijICZYyQB9PMRtdMli3S2O08SHscUmalaP7fQJOicCk78ObMhevAr8qEm9ZMT
- BkhZtOfqg/Qu14gIvc8XhP0VDgi4XOu3excuI3MpFZqtO2Au33XHB5JVm/BEZ8SxbLPRTjfCt
- ZP/DwCkFMDWxMGSYS2F64RoLA0GPzCqxA54jbVb4ngLvIiE8n7Zww0MXi7hFTxAJbyCHuKwOG
- LOPLKeENFKX5ZdYnnlLkDY/K4s0bsWPPN5tk6roLH75LGUAScmE+fDszJ9e1w2rLXTgXy3ygx
- QqW3UOtJ8WwxVA+58hzg4avapdccZbWcpCN3T3+XwGVVGp8mHkczXVSrN85EXZjwvnEDwqcF+
- Yy8aj7+Bd+bKjZjGkC9H4AaZ1i665nTf0JWT1Q5xrBk59L8Rf2tg0hp1x+AQQvlU9YOqN5+hR
- FTLjW86g6E0l2pb9dHbUWC3bTyD+UPzLFBQ+fDHpM3hvF91l0QRw0j9kl6lmHqE6/uHrLMptk
- MkvQdIYbuR1HWxQGBSVHxTaKfefCXGBGCAVHItAxtA9qk7XztZ67X4bejNejdyC4N2WyAjHf9
- g6QJxLGjzq/U6VKrDBPD49z2fhYurEHY1U0dOegbfkPQYqhIjc4GIRVLRzhJ7EBlhF8HH3Ve1
- GrqWFXwC3xJe8d2/bcRkzCk6RiEaYReutqma4tQatfN1AI4Mfk30f+8w=
+UI-OutboundReport: notjunk:1;M01:P0:EzNrFn9xkI4=;8DWpBIhuMNpzgSwAxfQ7dLLhNe9
+ rJznxzuVIOeaoZU+8zdc6bMAZaWOX191m6YuvJF5zlTkEmbgVD76qPgO2Y1+coVr+LuwZ7JnS
+ vWk0I9WuOlH+m1ytpblAoqYRY96llCe8Pzci9ZO5u1kt1mBzaXWEMUW+eHPPHvvm4cSRd/JXv
+ ah4YpGGGRpYevF3UGKuYeVBPCSL1qwF0iA4n3tRK+B9nx2MHdGv06+qTWpErTQCTYvQy7yok4
+ gdkp/Ee6x25tSvq77PZnH2qECgCo1ZJK7lkeJgCwmtlREFQ0Bnhu8jnkseS6K2SXEinx1v2hf
+ SmZRjmJZQ058ec6scJu2PqT2n3HQq77r41V4DfU+krCzqwEVajaS8roagNgmgcDA1MrzI/bG2
+ UQBgtjxbXPlRYbTf+s4QCcPDfXBSn9NN2gQZLM5L6Uq00VcdMD7ddzpLKIenPuWkA7gIJ6K/x
+ agvLGJ8nCORN15CgDuHgfbh/y2il346tDwqB5nvxV/R1SfZX4JUBBGLCpkmrhYY9rGdNLYAQG
+ roa/daAv/oxjZ4Tvek6wb/Mz7MwDrjQG93OxqqtaTdKGjnTK5ySOEVf+igyeCP9fpfA+AK7oa
+ sSYgMYB0tYEGZVwMXI+NqxaamqdrtpyjpWHHDYF1wfZ/H6qWkIDmYqmIAMeeYZMsmjFeODxtz
+ VGJmFV9wwn75kCh+EbzZ3Fz19QtoKTBD8ozTOUfoYVJkXdwYV9rbTdRTCg4EImIUH4c/KDrhT
+ S7wllpqjgmIWJMkRlIKRwhwMghd8Us8Cyibhid1SnTJwVxh8RGhy/xzqhCpqObd+1TALqC4t/
+ RvHHBbe2TMKQvDM5YKb7idT9v9u4NxABJnzrj2ergxqCnhy+QqsE6yXaEiKA56jbJ+oC7dkcz
+ IESEsG8o1x/twrNAYL1vWJ92u/xPAlfjPn6nb3zFeT2U7ohRnZ6ggzFl6ckw+1mX8lDJXgl2Y
+ F4xyRlSgc6Obeo3vXuF7K+lIfkiWOXILcOQIBec7VzgRmdLKxJ73BdNuG0FMpQ7oD+8Nq3krC
+ +1hR2NDLjxYnvTotm0+fW9PPWIud2zy5I7DT8YImSXU1wK2vFBfj6x9WZXb/2PshORP4fECPi
+ WodrPNUNlqFRPVKI6F50ZHUHZUqJpZpNyBKOG+BEKybe6TH9x/nMy3YSl/HvLf0lb2CqHb8tY
+ KunLjb+t/RYsMZTzWCxqTwKbqyb9L4mm+S3sPyztpRu3Y5wkBOnO8AGJkA1WsSFZcAVwIcWZG
+ JkVlZW3t5a3LBU6y0p8aSU0V723JuuewIFxWJ+nfdsOU2yeKlyIg4PVeeWgzmez+OVMI9k81I
+ dymPt+Cbi4LKFwE2rNpcP/m39WetK5OxfAjAb42vnG6ZGZlVmdm7Z/4sHpXBtXyThpm99aTzX
+ Ett3mzhWu6Wf3B61dj08mRdMuNJWlC9VxeGO1cIOChKqEGGKkhGiaAzUaaIgDakSURwIURcFF
+ ePlfCCSyvVNrywAEcPG8i9zJ7glah4NRtSXEswqJqfieME0kgE4k2qhwRXI+4wnWlWjfqDVPq
+ XRbp+KH4wfyRdQCXXJeh7i11vrZWRNfa8a3E+gH0Xj/jRe9D8d80h5OXHpzKXGUuPPPQoZI/a
+ njzlisWadfTYQDLM6Z4xZhCXxsouGvGNld9dXQji/2C1NWCpSLmAnXP1vj2E9rGGoJ41GXA/8
+ o0d+fXB7Lzn7lioyi0zaeWREgrmHOHgWsxvOc7WkP+8yrij30gT8zTp8TZp5B6SSVBTbnVLTR
+ 3A+45Nf6RjQgu1oaPsoP/Dd9+Ao7WG9EY07XFd4J9JRPvzEsXsUgCqQqy7X5jiodVkYqg1mqB
+ Sjcp
 
-Le 16/01/2026 à 18:10, Jason Gunthorpe a écrit :
-> On Fri, Jan 16, 2026 at 05:52:36PM +0100, Nicolas Cavallari wrote:
->> I debugged it further, it seems to be mostly a PCI issue since the system
->> does not actually have an IOMMU.
+Le 16/01/2026 à 18:24, Robin Murphy a écrit :
+> On 2026-01-16 4:52 pm, Nicolas Cavallari wrote:
+>> +cc regressions ML
 >>
->> When examining changes in the PCI configuration (lspci -vvvv), the main
->> difference is that, with the patch, Access Control Services are enabled on
->> the PCI switch.
+>> Le 13/01/2026 à 10:17, Nicolas Cavallari a écrit :
+>>> +cc patch author & reviewers
+>>>
+>>> On 1/9/26 17:22, Nicolas Cavallari wrote:
+>>>> When upgrading from 6.12 to a 6.18 kernel, I noticed that a PCI
+>>>> Ethernet adapter (Microchip LAN7430) would hang under load and not
+>>>> recover.  When that happens, some of its registers indicate it is
+>>>> failing to do DMA reads, so cannot reclaim entries on its ring buffer.
+>>>>
+>>>> I bisected the problem into this commit:
+>>>>
+>>>> commit bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
+>>>> Author: Robin Murphy <robin.murphy@arm.com>
+>>>> Date:   Fri Feb 28 15:46:33 2025 +0000
+>>>>
+>>>>        iommu: Get DT/ACPI parsing into the proper probe path
+>>>>
+>>>> The problem still exists on 6.19-rc1, on pci/next (29a77b4897f1) and on
+>>>> iommu/master (360e85353769) trees.  Reverting the commit fixes the
+>>>> issue.
 >>
->>          Capabilities: [220 v1] Access Control Services
->>                  ACSCap: SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+
->> UpstreamFwd+ EgressCtrl+ DirectTrans+
->> -               ACSCtl: SrcValid- TransBlk- ReqRedir- CmpltRedir-
->> UpstreamFwd- EgressCtrl- DirectTrans-
->> +               ACSCtl: SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
->> UpstreamFwd+ EgressCtrl- DirectTrans-
+>> The problem persists on 6.19-rc5
 >>
->> If I manually patch the config space in sysfs and re-disable ACS on the port
->> connected to the LAN7430, I cannot reproduce the problem.  In fact,
->> disabling only ReqRedir is enough to work around the issue.
+>>>> The system is a Gateworks GW7200, which is a i.MX 8 Mini connected to a
+>>>> Pericom
+>>>> PI7C9X2G404 4-port switch connected to the LAN7430 chip.
+>>>>
+>>>> -[0000:00]---00.0-[01-ff]----00.0-[02-05]--+-01.0-[03]----00.0
+>>>>                                               +-02.0-[04]--
+>>>>                                               \-03.0-[05]----00.0
+>>>>
+>>>> The problem only occurs when there is at least another PCI device in use
+>>>> on the
+>>>> switch.  It does not happen if the LAN7430 is the only PCI device, or if
+>>>> the
+>>>> other devices are not actively used.  For example i can reproduce it
+>>>> with an
+>>>> ath9k wireless network adapter when it is up and running, but not when
+>>>> it is
+>>>> down or its driver is not loaded.
+>>>>
+>>>> I suspect that other PCI devices have similar issues, but the LAN7430 is
+>>>> the
+>>>> easiest one to diagnose, as it hangs within seconds with an iperf3 --
+>>>> bidir -u
+>>>> -b 200M and its register map are public.
+>>>>
+>>>> I couldn't find an way to dump the PCI address translation mapping from
+>>>> userspace.
+>>>> I would be happy to provide more information or test patches.
+>>
+>> I debugged it further, it seems to be mostly a PCI issue since the
+>> system does not actually have an IOMMU.
 > 
-> My guess would be your system has some kind of address alias going on?
+> Indeed, I was figuring this had to be another case of a switch with
+> wonky ACS - do Mani's patches adjusting ACS enablement make any difference?
 > 
-> Assuming you are not facing an errata, ACS generally changes the
-> routing of TLPs so if you have a DMA address that could go to two
-> different places then messing with ACS will give you different
-> behaviors.
+> https://lore.kernel.org/all/20260102-pci_acs-v3-1-72280b94d288@oss.qualcomm.com/
+
+With this series, ACS is still enabled and eth1 is still failing under load.
+
+> Although in this case I guess the issue is arguably more that we're
+> requesting ACS at all, before we know that there's actually an IOMMU
+> present to warrant it. Clearly the best option would be to figure out if
+> the switch behaviour itself can be fixed somehow, but perhaps something
+> like this might help paper over the issue for now (but I'd have to test
+> it to make sure it doesn't break IOMMUs again...)
 > 
-> In specific when you turn all those ACS settings you cannot do P2P
-> traffic anymore. If your system expects this for some reason then you
-> must use the kernel command line option to disable acs.
+> ----->8-----
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 6b989a62def2..837cc0b5ace4 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -141,10 +141,12 @@ int of_iommu_configure(struct device *dev, struct
+> device_node *master_np,
+>    			.np = master_np,
+>    		};
 > 
-> If you are just doing normal netdev stuff then it is doubtful that you
-> are doing P2P at all, so I might guess a bug in the microchip ethernet
-> driver doing a wild DMA? Stricter ACS settings cause it to AER and the
-> device cannot recover?
+> -		pci_request_acs();
+>    		err = pci_for_each_dma_alias(to_pci_dev(dev),
+>    					     of_pci_iommu_init, &info);
+> -		of_pci_check_device_ats(dev, master_np);
+> +		if (!err) {
+> +			pci_request_acs();
+> +			of_pci_check_device_ats(dev, master_np);
+> +		}
+>    	} else {
+>    		err = of_iommu_configure_device(master_np, dev, id);
+>    	}
+> -----8<-----
 
-Yes, i'm just running network throughput tests (iperf3) on eth1 while wlan0 is 
-idling, and those are the only two peripheral on the PCI bus. I don't think 
-there are anything unusual going on (P2P or vendor commands).
-
-Bit it turns out there is an errata for the Pericom PI7C9X2G404 switch that 
-matches my problem, and there is already a workaround in the kernel, but it does 
-not match my PCI ids:
-
-   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2404,
-                            pci_fixup_pericom_acs_store_forward);
-   DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2404,
-                            pci_fixup_pericom_acs_store_forward);
-   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2304,
-                            pci_fixup_pericom_acs_store_forward);
-   DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2304,
-                            pci_fixup_pericom_acs_store_forward);
-   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2303,
-                            pci_fixup_pericom_acs_store_forward);
-   DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2303,
-                            pci_fixup_pericom_acs_store_forward);
-
-While my device is 12d8:b404 and lspci still identifies it as PI7C9X2G404:
-
-01:00.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EV/SV PCIe2 
-4-Port/4-Lane Packet Switch [12d8:b404] (rev 01) (prog-if 00 [Normal decode])
-
-Adding this ID to the quirks.c list fixes the issue. I'll send a patch.
+With this, ACS is indeed disabled and eth1 no longer fails under load, but I 
+have also identified an errata on the PCIe switch that causes ACS to fail. I've 
+sent another message in this thread.
 
