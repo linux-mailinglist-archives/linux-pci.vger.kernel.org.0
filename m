@@ -1,185 +1,113 @@
-Return-Path: <linux-pci+bounces-45249-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45250-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08127D3C26D
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 09:45:04 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE0DFD3C2A4
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 09:55:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0B413600707
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 08:22:51 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E26AD641BE7
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 08:34:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAB73AE6F7;
-	Tue, 20 Jan 2026 08:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6B93BF2EF;
+	Tue, 20 Jan 2026 08:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wrDqE1EJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZZln0+l"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30043B8BDB
-	for <linux-pci@vger.kernel.org>; Tue, 20 Jan 2026 08:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB763B961E;
+	Tue, 20 Jan 2026 08:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768896664; cv=none; b=IUbQ3Ak7bkD9oVJ8f70rH0O7k/wrA/hwMYCjvKV3ps8Qgvbq84lUGr6ZtNvyLcEJwQUtLU+Qsxr4Nlooc885SXHBRfQlzWo4uzR71BHKwsDg1imzrJ5tb3q+RtLpMhW0AF4wXKsexkwNwW4fAwKX7O/9enYZcMMTV9v6HfsTkec=
+	t=1768897872; cv=none; b=oaduWz0igA8bGQlOu36Nc6ZIB5lzH1urc033HabjrWkncbYq9SfZE7PeIoTorOgnk2VI+Crj/T/cxK3oU6OZjUMnoYTxaFLuIJEisS39i7PHRBOuX12UhzpQNHwrPxqAOuudb43NqaEsEnNDNtoPuxYtN4nQqPfIPNl22SiQ4Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768896664; c=relaxed/simple;
-	bh=P+SC1Lv8GtKFMmDmSP1puIAFS8fxxtphwLdKaMU0tBM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZVrHlBEboof557hIbIATe41aKse9d7EVBj9/ZI3rDv+WlVBWUVSSLyOJgZejZGPtVraiq2hxHco67a7pEU4ZrcDEc5+/6K7n35VPOLNRKB+OvtarKjcbJRB6yTPZqABXbvU8PnmwZD+FEH0VdhIZPaiZCMDaLBQeBZJxtaxbJnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wrDqE1EJ; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b871e14de77so1230732266b.2
-        for <linux-pci@vger.kernel.org>; Tue, 20 Jan 2026 00:11:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768896661; x=1769501461; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4fFtv+H37c+9JHNHcFH2S2lHNgEGMW4y4wNCwUNdFE=;
-        b=wrDqE1EJVkL3N/rsFq/LO+Z70VvTe65FznBb1G3/Z6FuT7Rchu2cFhbV0YCZgWwSbD
-         /c46y2TDpLJ+QgvS7AiQiMLuN/yzyDG855HyBuqeJXxWTR/NndntXkafPscLHiw11Awa
-         ggyejAdp3Q7AvsNFzwpsysB7uEH80OmiI9gprG+cWSslMTfJMnLgtRww7EhzHXaB9sLP
-         EXv6t1A2mt19UYqedJ+q2oEujMx5cPm0nD4Rs6BtBdJCFtoPYRyHAX0RFbFfjHDx4CCy
-         Vd27dNlt/x1sKbcJZr5Z3IItpsMCsKO+41knjlqsJURLPrzOsjp2C0NEXLVnkEpPHnN2
-         TqXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768896661; x=1769501461;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4fFtv+H37c+9JHNHcFH2S2lHNgEGMW4y4wNCwUNdFE=;
-        b=je4UmdVm1e2JC6HdUOlulyBo9Nva4KqvPfXpoqBieQDQskMG7I90ckOfbOOiJIv4Vz
-         trFoy8GXcw/OG4JLs8NeP0KgfqOdOmJ2WjdyZO3QBCz5+F88ZP4ow9Rzk5huQzA+Z753
-         QWY3qVdpxws1eL/GL68g7xv6j8K3Kj7cCxjIg98Nqj7taLkkECPkamVHN/py9rqthaoe
-         QqtOUoVgWgB+iRMeOJuFMmjWC9CEMEdKJf7BbbQ9K0bywyxKJHP47/gquzmJ4KpHY+CE
-         d8Isfhl+y62pYglzUwhMW7nOlxfh6tLfpJBrU5T5tX7D6vQ/LUtY9iAcnSMiQkZn2hY0
-         HJSA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1hd6p25f9+NXBoKRQHzSg87sEfC2sFWGOxzgHsP0hJRQxmjcG+9w835RnrWKYehPhKqLwHlL5Yrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcBshyPrAlmasm+3KxhI70E4O4FbyNpftj5cnEnXii+bVHQrZB
-	4p7WmCXwon4S/GZSvmEvApSNkHjif8KjrbxBCavtW4A4it4T9DsStsNBDVSI8ZQaRvYx+I9uRr+
-	OoQP8BXlGnN3Jm8Zecw==
-X-Received: from wmgb2.prod.google.com ([2002:a05:600c:1502:b0:477:9801:6a64])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3e0d:b0:479:3a86:dc1c with SMTP id 5b1f17b1804b1-4803e803c1amr13091405e9.36.1768896286451;
- Tue, 20 Jan 2026 00:04:46 -0800 (PST)
-Date: Tue, 20 Jan 2026 08:04:45 +0000
-In-Reply-To: <20260119202250.870588-3-zhiw@nvidia.com>
+	s=arc-20240116; t=1768897872; c=relaxed/simple;
+	bh=ybobKlLqgzRRQErpTQFwqacYgn+/shHNZw2eXZIJ0kM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KyKwVIF9n1br3peGFpX/N2QvHLXyPoeuDN5CRhSYf4KQlOkMJxlbOMGZCYTaRRILjQUGxMoqX3Peat0112kPt5J4QdjR8nPOij7w1nZyosOH5Fz0v8vsH1HCwinv2PhFNBNah4Nm3GaySXv2GJXz6T2VPlEJwDBdsw65S5iWTJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZZln0+l; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768897871; x=1800433871;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ybobKlLqgzRRQErpTQFwqacYgn+/shHNZw2eXZIJ0kM=;
+  b=AZZln0+lbXLmTf/0niXRdngoyGLbO8939/Ju+7Cls9x9URbYdUPPl1ni
+   6Rwr8x9oeODZ6VTP4+1EUjN96u9hzwiPFqmvHfv4j/FD0CW03ixHponKG
+   ebOlLjPkv7WIXr96SjV/8zW0Mze52CL8o1LNVzufEO0pZAtzw+J9OWlbm
+   Tjr4DmHpqTFAX5Dvy5OzC3SgFvj5li7KRWjZnJnpiq3IZBkUfrKQYgLHA
+   oLZaE+DvTTc1dn92PQosGMFtmeyTMGwZZD+UmVOMGCbdig9JTXk0Zwz1J
+   XffewdWAeFP9ev2ibJxHASNGwrlaZ+q1LXNPm4pBXwLjauNdFglE0gNNc
+   A==;
+X-CSE-ConnectionGUID: 53q6vwjIR8GOO/QYHDdkpg==
+X-CSE-MsgGUID: qGeYX8JsS5Gd/YgSEkeOlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70071904"
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="70071904"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 00:31:10 -0800
+X-CSE-ConnectionGUID: N3jlgTR+Rgm5RSzD6uKP2Q==
+X-CSE-MsgGUID: PnhGM5MWT5az0LkVVhmv3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="210530638"
+Received: from krybak-mobl1.ger.corp.intel.com (HELO pujfalus-desk.intel.com) ([10.245.246.55])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 00:31:06 -0800
+From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	tiwai@suse.de,
+	bhelgaas@google.com
+Cc: linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	linux-kernel@vger.kernel.org,
+	kw@linux.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH 0/4] ASoC/SOF/PCI/Intel: Support for Nova Lake
+Date: Tue, 20 Jan 2026 10:31:44 +0200
+Message-ID: <20260120083148.12063-1-peter.ujfalusi@linux.intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260119202250.870588-1-zhiw@nvidia.com> <20260119202250.870588-3-zhiw@nvidia.com>
-Message-ID: <aW83HV4lVR5MQlDd@google.com>
-Subject: Re: [PATCH v10 2/5] rust: io: separate generic I/O helpers from MMIO implementation
-From: Alice Ryhl <aliceryhl@google.com>
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dakr@kernel.org, bhelgaas@google.com, 
-	kwilczynski@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
-	markus.probst@posteo.de, helgaas@kernel.org, cjia@nvidia.com, 
-	smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, 
-	kwankhede@nvidia.com, targupta@nvidia.com, acourbot@nvidia.com, 
-	joelagnelf@nvidia.com, jhubbard@nvidia.com, zhiwang@kernel.org, 
-	daniel.almeida@collabora.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 19, 2026 at 10:22:44PM +0200, Zhi Wang wrote:
-> The previous Io<SIZE> type combined both the generic I/O access helpers
-> and MMIO implementation details in a single struct. This coupling prevented
-> reusing the I/O helpers for other backends, such as PCI configuration
-> space.
-> 
-> Establish a clean separation between the I/O interface and concrete backends
-> by separating generic I/O helpers from MMIO implementation.
-> 
-> Introduce two traits to handle different access capabilities:
-> - IoCapable<T> trait provides infallible I/O operations (read/write)
->   with compile-time bounds checking.
-> - IoTryCapable<T> trait provides fallible I/O operations
->   (try_read/try_write) with runtime bounds checking.
-> - The Io trait defines convenience accessors (read8/write8, try_read8/
->   try_write8, etc.) that forward to the corresponding IoCapable<T> or
->   IoTryCapable<T> implementations.
-> 
-> This separation allows backends to selectively implement only the operations
-> they support. For example, PCI configuration space can implement IoCapable<T>
-> for infallible operations while MMIO regions can implement both IoCapable<T>
-> and IoTryCapable<T>.
-> 
-> Move the MMIO-specific logic into a dedicated Mmio<SIZE> type that
-> implements Io and the corresponding `IoCapable<T>` and `IoTryCapable<T>` traits.
-> Rename IoRaw to MmioRaw and update consumers to use the new types.
-> 
-> Cc: Alexandre Courbot <acourbot@nvidia.com>
-> Cc: Alice Ryhl <aliceryhl@google.com>
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Gary Guo <gary@garyguo.net>
-> Cc: Danilo Krummrich <dakr@kernel.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+Hi,
 
-Overall looks good to me. Some comments below:
+this series adds audio support for the NVL variant of the
+Nova Lake family.
+NVL also based on ACE4 audio subsystem, but with higher clock
+rate, more DSP memory and more DSP cores (4 vs 2) compared to
+NVL-S.
 
-> +/// Trait representing infallible I/O operations of a certain type.
-> +///
-> +/// This trait is used to provide compile-time bounds-checked I/O operations.
-> +/// Different I/O backends can implement this trait to expose only the operations they support.
-> +///
-> +/// For example, a PCI configuration space may implement `IoCapable<u8>`, `IoCapable<u16>`,
-> +/// and `IoCapable<u32>`, but not `IoCapable<u64>`, while an MMIO region on a 64-bit
-> +/// system might implement all four.
-> +pub trait IoCapable<T> {
-> +    /// Infallible read with compile-time bounds check.
-> +    fn read(&self, offset: usize) -> T;
-> +
-> +    /// Infallible write with compile-time bounds check.
-> +    fn write(&self, value: T, offset: usize);
-> +}
-> +
-> +/// Trait representing fallible I/O operations of a certain type.
-> +///
-> +/// This trait is used to provide runtime bounds-checked I/O operations.
-> +/// Backends that do not support fallible operations (e.g., PCI configuration space)
-> +/// do not need to implement this trait.
-> +pub trait IoTryCapable<T> {
-> +    /// Fallible read with runtime bounds check.
-> +    fn try_read(&self, offset: usize) -> Result<T>;
-> +
-> +    /// Fallible write with runtime bounds check.
-> +    fn try_write(&self, value: T, offset: usize) -> Result;
-> +}
+Regards,
+Peter
+---
+Peter Ujfalusi (4):
+  PCI: pci_ids: Add Intel Nova Lake audio Device ID
+  ASoC: SOF: Intel: add support for Nova Lake NVL
+  ALSA: hda: core: intel-dsp-config:: Add support for NVL
+  ALSA: hda: controllers: intel: add support for Nova Lake
 
-I still think it would make sense to have `IoCapable<T>: IoTryCapable<T>`,
-but it's not a big deal.
+ include/linux/pci_ids.h           |  1 +
+ sound/hda/controllers/intel.c     |  1 +
+ sound/hda/core/intel-dsp-config.c |  4 ++++
+ sound/soc/sof/intel/hda.h         |  1 +
+ sound/soc/sof/intel/nvl.c         | 24 ++++++++++++++++++++++++
+ sound/soc/sof/intel/pci-nvl.c     | 31 +++++++++++++++++++++++++++++++
+ 6 files changed, 62 insertions(+)
 
-> +    /// Infallible 64-bit read with compile-time bounds check.
-> +    #[cfg(CONFIG_64BIT)]
-> +    fn read64(&self, offset: usize) -> u64
-> +    #[cfg(CONFIG_64BIT)]
-> +    fn try_read64(&self, offset: usize) -> Result<u64>
+-- 
+2.52.0
 
-These don't really need cfg(CONFIG_64BIT). You can place that cfg on
-impl blocks of IoCapable<u64>.
-
-e.g., remove above but keep here:
-
-> +// MMIO regions on 64-bit systems also support 64-bit accesses.
-> +#[cfg(CONFIG_64BIT)]
-> +impl<const SIZE: usize> IoCapable<u64> for Mmio<SIZE> {
-> +    define_read!(infallible, read, readq -> u64);
-> +    define_write!(infallible, write, writeq <- u64);
-> +}
-
-> +#[cfg(CONFIG_64BIT)]
-> +impl<const SIZE: usize> IoTryCapable<u64> for Mmio<SIZE> {
-> +    define_read!(fallible, try_read, readq -> u64);
-> +    define_write!(fallible, try_write, writeq <- u64);
-> +}
-
-Alice
 
