@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-45296-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45297-lists+linux-pci=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +KDUCrnTb2mgMQAAu9opvQ
-	(envelope-from <linux-pci+bounces-45296-lists+linux-pci=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 20:12:57 +0100
+	id kCuwBynMb2mgMQAAu9opvQ
+	(envelope-from <linux-pci+bounces-45297-lists+linux-pci=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 19:40:41 +0100
 X-Original-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3DD74A157
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 20:12:56 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C719C499FB
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 19:40:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EB7D77EAD3F
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 17:47:51 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 800687EAEF2
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 17:47:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D79743C06F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F90A43C077;
 	Tue, 20 Jan 2026 17:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHuf2OoO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jc9BbYc3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEAC30F950;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF30326D53;
 	Tue, 20 Jan 2026 17:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768931266; cv=none; b=iciZXkDbw3k2TdtBm96kYgMvcXANikITdV5mFS5eJtPXf0LZ7gZmvLZ5VUpNGTf/Z/S+ifXedE5mL7QO/v7T6kkPx3YtFxgirc5nVlxv3F0jWnEnqHrNxm1BQ51ckm3tqJy8YJkJ7XcFagl1yOWe1jSOMHRILJYt9M4DNHq1kwg=
+	t=1768931266; cv=none; b=IBOE4SQNVrYE0piWLI65SvPTfO75FRU6l33bVxGATN2mYZfEmR8FjHRJX9RtuArM1BHrxFKm0xVXtnyj4cuw3MQN1LwU1Ee/ihXcw93ny1x/p9H7g4YrxDdc8aRII6V7K7wM7tPnF+mYAmvrKLKWiXVp7kwavk3uOl26TQvsx10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768931266; c=relaxed/simple;
-	bh=LNIqiIz35Ow0dB+iP/L2EzA6wdMLWrPcxHXyLD9uLEk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mx5Hug/WjemA2aMGFJo9oJV2TSZHiaUn/aNCAh+20bDIHH67XEu4K7yEK7Zhebh+4mRb7yQvXST0WahdzK9AnMdM0MD/zs6OuaxNytbLgyTIc6sgnMyzt1ujxJTZ0m7mu8naXtmPVLVfEHkENq2vOz3wdyy+KfjGjOx/GNvW4rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHuf2OoO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5F5C3C19421;
+	bh=o2bc49G4zzjwHJj3X8ryTWNjsLEUfank6fQaGgoABrE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UJvl2SYzsvlLseFMp86FiC/aZKd67cLbbvTYEpA0bKe+Z8Fg0W8+8wDPfr+7nhaQVLfqJGp11Tl79jMiWJfNKL4+TkzJnRo8LolKerPhvr2vbzk4GXwiIAUGheLhLG/Yjtb02QFn1os9Cs0sH/jlJc67q3M8nuJuuS+4Cz5H97k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jc9BbYc3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E987C2BC86;
 	Tue, 20 Jan 2026 17:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1768931266;
-	bh=LNIqiIz35Ow0dB+iP/L2EzA6wdMLWrPcxHXyLD9uLEk=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=jHuf2OoOOi2nJjVKJqIrBokh1CQ5qHbiRYvwVNVcs5G5VHbTRhUlETVSARQ9qiz3T
-	 lND/yC6LNo+XaRxfiuJcvOsDNYAxTrWKZL2CPG17Sd4dWKocI8borJQm0rWERcr9yf
-	 y84pYWwhPHKHHr7PGBwBEmQ+LCMzHx8o0jCahWequ6PpvXod1b4+IWQWxqljf49OEN
-	 kj9sbQL3HcCy9Tx1dhvtGh4eKipNtETvFGY63DnqM6HhPR+fkc64n267zVGlQeYxnS
-	 vTgS59OwLNIFFR1vA13C/aoeB+hktP8AN5RKO1XHPJJKkwxRlSD0iAANt5JvPKVzsv
-	 z28qpUmdwGJMw==
+	bh=o2bc49G4zzjwHJj3X8ryTWNjsLEUfank6fQaGgoABrE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=jc9BbYc33x1mdUIXXekN8Z5V5vETaj0f2fRXFfOQCJxFTxOOG2suv+fMms89pcH6A
+	 PGs2h1xTSWrdH6USEKDIgEq6hh6AZPhE1LbtTeH4g2R5mUi+cA3weR7X/+R+daZ18v
+	 Y3hIKjcdRb977L6BjNgRt0yiQMXgTYhxb66l7gegS/B3+ZzCrPtVcWsQmM95aMoDnx
+	 GqS7yaCHEU6q2hYsbASnFh+RVqYmvOBZGTbxQyxMhHYF56SHrt5OUsVQ+XhwFX6OIb
+	 UBhXt1bOo57S1bichmyzct8gKazdM41AniEY7erUuU67aqTWdPa9i6BTUk2+wquoPJ
+	 z6SPisJRpCQ6Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1F3CA5FBB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B72CCA5FBD;
 	Tue, 20 Jan 2026 17:47:46 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Subject: [PATCH v4 0/5] PCI: dwc: Rework the error handling of
- dw_pcie_wait_for_link() API
-Date: Tue, 20 Jan 2026 23:17:39 +0530
-Message-Id: <20260120-pci-dwc-suspend-rework-v4-0-2f32d5082549@oss.qualcomm.com>
+Date: Tue, 20 Jan 2026 23:17:41 +0530
+Subject: [PATCH v4 2/5] PCI: dwc: Return -EIO from dw_pcie_wait_for_link()
+ if device is not active
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,11 +61,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALu/b2kC/4XNwQ6CMAyA4VchO1uyTQbDk+9hPMxtyqIwXGVoC
- O/u4OJF46XJ36RfJ4I2OItkl00k2OjQ+S5FscmIblR3seBMasIpF4yxGnrtwIwacMDedgaCHX2
- 4gjxRwYTayrKqSTrugz275wofjqkbhw8fXuufyJbtXzIyoKCUYbSQXIqS7z1ifh/UTfu2zdMgi
- xz5R+NM/tR40oSqqkrqktaF+qLN8/wGpZZfZhEBAAA=
-X-Change-ID: 20251119-pci-dwc-suspend-rework-8b0515a38679
+Message-Id: <20260120-pci-dwc-suspend-rework-v4-2-2f32d5082549@oss.qualcomm.com>
+References: <20260120-pci-dwc-suspend-rework-v4-0-2f32d5082549@oss.qualcomm.com>
+In-Reply-To: <20260120-pci-dwc-suspend-rework-v4-0-2f32d5082549@oss.qualcomm.com>
 To: Jingoo Han <jingoohan1@gmail.com>, 
  Manivannan Sadhasivam <mani@kernel.org>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -77,16 +75,16 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  Richard Zhu <hongxing.zhu@nxp.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2551;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2234;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=LNIqiIz35Ow0dB+iP/L2EzA6wdMLWrPcxHXyLD9uLEk=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpb7+/u8cAJRCYx1de+zE2cF1PsPrS+sMLsbksX
- hOQ/ODi73iJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaW+/vwAKCRBVnxHm/pHO
- 9U1wB/0cB6ghiIJDfjb0BWy2iBYwszcPE/QFkdSSrE6n0aCXH7jxx7hx8eH1CIP8+tPdwBTojqx
- HC06tBxQqZq9b17jfTqGSQwumQ38pMwkq4pHQWBw1ewWeXSiQqv363fmAeNIDQ7HqJGUMXvo0YE
- UTu7f34O0zN1WvOhWYjOLuictjdbuizs1/26VZCElbn8QY1dal8hoUcOdWbOmkCw9SIZLH9Ie5h
- pIzuRtiyZWgo862sJOubuUObeyeqlJJQIpyBlM6Zx0HlovVp0Qn9HhVBMdn6D9xSdEaC6tlX8pT
- g5ciMy2EPgQ6onLDGF5PUSeZY8exGh8IIs92FiZleiRS09Ve
+ bh=lJs2RDxnLG6iq+YlIuSttT/5SGXBjIWrnLIyz20iOiw=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpb7/A0Z/hHcog/Tj52mcEMvbyI30KwG25mDnHY
+ EgKLBn4PYeJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaW+/wAAKCRBVnxHm/pHO
+ 9cDxB/92DSlhtWBAH6buRsxQAx6Dykvjva6+MO7NInFxA63xXOUb3f6ouifoWUrh4vEYQd1Z2WQ
+ ynshL9xbNpxxTeqJD3GAUGljVOreDusYW6UKaRE8TsOu+AgpbMvG922Wxi86//lTz+59vuM2svk
+ 9xMQpmr8C6xAhqLatkD2BieP4xs3RizxVZX5YH9J7ZcZ6tjSMbiemYjorfyoP1vC8AMjntoztP4
+ 62c9K8m3XS4tl9A8NucNx1P6UQFZSQ2HvP6i7KWScwlPMqsulVN1u9Rwpx/skSR18hvPaagn19+
+ WqfYVOPGi3gFn3n1SCneC6+GZK87qcwKBFHnpAqqgdNjakGe
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -101,7 +99,7 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-45296-lists,linux-pci=lfdr.de,manivannan.sadhasivam.oss.qualcomm.com];
+	TAGGED_FROM(0.00)[bounces-45297-lists,linux-pci=lfdr.de,manivannan.sadhasivam.oss.qualcomm.com];
 	FREEMAIL_TO(0.00)[gmail.com,kernel.org,google.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,74 +115,69 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pci@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
 	TAGGED_RCPT(0.00)[linux-pci];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,qualcomm.com:email]
-X-Rspamd-Queue-Id: E3DD74A157
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,oss.qualcomm.com:mid,oss.qualcomm.com:replyto,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: C719C499FB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-This series reworks the dw_pcie_wait_for_link() API to allow the callers to
-detect the absence of the device on the bus and skip the failure.
+There are cases where the PCIe device would be physically connected to the
+bus, but the device firmware might not be active. So the LTSSM will
+get stuck in POLL.{Active/Compliance} states.
 
-Compared to v2, I've reworked the patch 2 to improve the API further and
-dropped the patch 1 that got applied (hence changed the subject). I've also
-modified the error code based on the feedback in v2 to return -ENODEV if device
-is not detected on the bus, -EIO if the device is found but not active and
--ETIMEDOUT otherwise. This allows the callers to skip the failure as needed.
+This behavior is common with endpoint devices controlled by the PCI
+Endpoint framework, where the device will wait for the user to start its
+operation through configfs.
 
-Testing
-=======
-
-Tested this series on Rb3Gen2 board without powering on the PCIe switch. Now the
-dw_pcie_wait_for_link() API prints:
-
-	qcom-pcie 1c08000.pcie: Device not found
-
-Instead of the previous log:
-
-	qcom-pcie 1c08000.pcie: Phy link never came up
+For those cases, print the relevant log and return -EIO to indicate that
+the device is present, but not active. This will allow the callers to skip
+the failure as the device might become active in the future.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
-Changes in v4:
-- Added a check for POLL state and returned -EIO from dw_pcie_wait_for_link()
-- Collected tags
-- Link to v3: https://lore.kernel.org/r/20251230-pci-dwc-suspend-rework-v3-0-40cd485714f5@oss.qualcomm.com
+ drivers/pci/controller/dwc/pcie-designware.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Changes in v3:
-- Dropped patch 1 that got appplied
-- Reworked the error handling of dw_pcie_wait_for_link() API further
-- Link to v2: https://lore.kernel.org/r/20251218-pci-dwc-suspend-rework-v2-0-5a7778c6094a@oss.qualcomm.com
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 55c1c60f7f8f..aca5bbeade03 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -696,8 +696,9 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
+  * dw_pcie_wait_for_link - Wait for the PCIe link to be up
+  * @pci: DWC instance
+  *
+- * Returns: 0 if link is up, -ENODEV if device is not found, -ETIMEDOUT if the
+- * link fails to come up for other reasons.
++ * Returns: 0 if link is up, -ENODEV if device is not found, -EIO if the device
++ * is found but not active and -ETIMEDOUT if the link fails to come up for other
++ * reasons.
+  */
+ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+ {
+@@ -722,6 +723,16 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+ 		    ltssm == DW_PCIE_LTSSM_DETECT_ACT) {
+ 			dev_info(pci->dev, "Device not found\n");
+ 			return -ENODEV;
++
++		/*
++		 * If the link is in POLL.{Active/Compliance} state, then the
++		 * device is found to be connected to the bus, but it is not
++		 * active i.e., the device firmware might not yet initialized.
++		 */
++		} else if (ltssm == DW_PCIE_LTSSM_POLL_ACTIVE ||
++			   ltssm == DW_PCIE_LTSSM_POLL_COMPLIANCE) {
++			dev_info(pci->dev, "Device found, but not active\n");
++			return -EIO;
+ 		}
+ 
+ 		dev_info(pci->dev, "Phy link never came up\n");
 
-Changes in v2:
-- Changed the logic to check for Detect.Quiet/Active states
-- Collected tags and rebased on top of v6.19-rc1
-- Link to v1: https://lore.kernel.org/r/20251119-pci-dwc-suspend-rework-v1-0-aad104828562@oss.qualcomm.com
-
----
-Manivannan Sadhasivam (5):
-      PCI: dwc: Return -ENODEV from dw_pcie_wait_for_link() if device is not found
-      PCI: dwc: Return -EIO from dw_pcie_wait_for_link() if device is not active
-      PCI: dwc: Rename and move ltssm_status_string() to pcie-designware.c
-      PCI: dwc: Rework the error print of dw_pcie_wait_for_link()
-      PCI: dwc: Fail dw_pcie_host_init() if dw_pcie_wait_for_link() returns -ETIMEDOUT
-
- .../pci/controller/dwc/pcie-designware-debugfs.c   | 54 +-------------
- drivers/pci/controller/dwc/pcie-designware-host.c  |  9 ++-
- drivers/pci/controller/dwc/pcie-designware.c       | 86 +++++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-designware.h       |  2 +
- 4 files changed, 94 insertions(+), 57 deletions(-)
----
-base-commit: 68ac85fb42cfeb081cf029acdd8aace55ed375a2
-change-id: 20251119-pci-dwc-suspend-rework-8b0515a38679
-
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+2.51.0
 
 
 
