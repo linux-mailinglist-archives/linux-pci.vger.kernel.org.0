@@ -1,269 +1,370 @@
-Return-Path: <linux-pci+bounces-45283-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45284-lists+linux-pci=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oITEJSWwb2nMKgAAu9opvQ
-	(envelope-from <linux-pci+bounces-45283-lists+linux-pci=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 17:41:09 +0100
+	id EAmpOEC7b2kOMQAAu9opvQ
+	(envelope-from <linux-pci+bounces-45284-lists+linux-pci=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 18:28:32 +0100
 X-Original-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C33F647C9E
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 17:41:08 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9770F488F9
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 18:28:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7EF618CC978
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 16:16:41 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 19B0240D2D5
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 16:23:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64CB23002BA;
-	Tue, 20 Jan 2026 15:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100FE44CF52;
+	Tue, 20 Jan 2026 16:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="SHrmRcVZ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KDJga7K0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022124.outbound.protection.outlook.com [52.101.96.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9674A27F017;
-	Tue, 20 Jan 2026 15:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768924794; cv=fail; b=N7AhWlHMNQ2zvd2wLLzuLD7sc2nq12z/mKxF+akzJQwAolErvb4JYZnjizlTh6bng6TwH1n0vpsyzEr6s6XMavqqEuB8ww+zXYZBLoqnV47r0s/OUeB4zXyPnrA4SizaOgeBzzgNOe3spKSXlaXQxRr70BtAksUxGiExKkJxIUI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768924794; c=relaxed/simple;
-	bh=6Qpr2VlTqbzISF/g+7QTyGSl8wVZs1KblMx1RS+gKkE=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=KBsTMINu5N7jy5oHtaNBza1UpQemklLrbHI2c6ssQfk6UxvHm5RB3RA0Kdls2Ls+lmGtPnhE52E4yv8d0DHfjGyzFYUjd7brw+yfb+zf2LKQCOJkmPupcMQ4bhNZfSav/A9HjFqT99C5WTZGvo0WtpDyTa2vzzFarqXMl0ZWvFw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=SHrmRcVZ; arc=fail smtp.client-ip=52.101.96.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dyIUGt4tHgnXEMvw4Fx647CVw80/1c919gAcef/M3Eja+LfYzZ0xXGcaNFWikOYx8YafMfniMar0IySAI9VPHkMlJhPomyxQfiXebkFBky6YS37t9Nhc2cMTOJqSVko4kwfJeyaUxgS7TjGifWqoAwE/9IZK0PisAgtMhY+Du/r8K6GKU7mA0PDtAMxCz6BMZGDayXbxipEucSN5ZYT3jPvllm5Wv2LgZ09eyxr/VQZH5D9MC5feXhwGP8OIau748vgfLPRV3sErD4tK19Oh7Z9r8JOD2+1gTHPtyecwmwXD/pPw/awSXKidrb2VzwmtjYUVuGe+qN5cMV0i9BakRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oyEC3RFNYp1s5cTvr7tKkVCQnbkOP2onWKFDMPuj5Ok=;
- b=OG35ZES3JPFh/rKnbhpc0ZpjPPQwQxhIku01DtjkKnxTw3QTxFXsDdB0BbKe8qsnkrke61NWrM8/j0rOqqL81G877Y6LzCC9dauFQ+Zn4pnptzvaWUeDTudg31cuotvjed+H3iwaoyuj1gkqteElkTEjgFow30NdqYwRFX+/m+Bgm4e+RbQrQQMF4AOAfNGsM2sua+Ybf4RimoCQJVN8i8q2+K9F6UVJbVgWLTA1zDe3aBYqaIWIQAB18eIJ3SpAge5yxC2Q6qIIGuVxmgRj34kngSgc16+bx2uPlRoJvj7dKfs6dNnNJBZHu3J9ePFzxGgOw2ssL6XTH+SFwVMTrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oyEC3RFNYp1s5cTvr7tKkVCQnbkOP2onWKFDMPuj5Ok=;
- b=SHrmRcVZz1lrEpTkXwGqdHjPEwMpGB7wW3w/tPG6bZbnByS7c5tHDTd7SbYAEWXI/5gBqkiv6OizFkwxsT9HPTa4LK/+W57RPf6Q0T6kH5qf7eYISPDGtBApdIGilr7SpKUi/UK+qsYgmXXGec5tjO1DiABAYfy5GAnU3aVvlwk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
- by LO3P265MB2251.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:103::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.6; Tue, 20 Jan
- 2026 15:59:48 +0000
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986%5]) with mapi id 15.20.9520.012; Tue, 20 Jan 2026
- 15:59:47 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 20 Jan 2026 15:59:47 +0000
-Message-Id: <DFTJI4PTLDWM.1F7X1KN1Q264S@garyguo.net>
-Cc: "Zhi Wang" <zhiw@nvidia.com>, <rust-for-linux@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <lossin@kernel.org>, <a.hindborg@kernel.org>,
- <tmgross@umich.edu>, <markus.probst@posteo.de>, <helgaas@kernel.org>,
- <cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
- <aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
- <acourbot@nvidia.com>, <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>,
- <zhiwang@kernel.org>, <daniel.almeida@collabora.com>
-Subject: Re: [PATCH v10 2/5] rust: io: separate generic I/O helpers from
- MMIO implementation
-From: "Gary Guo" <gary@garyguo.net>
-To: "Danilo Krummrich" <dakr@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>
-X-Mailer: aerc 0.21.0
-References: <20260119202250.870588-1-zhiw@nvidia.com>
- <20260119202250.870588-3-zhiw@nvidia.com> <aW83HV4lVR5MQlDd@google.com>
- <DFTC434Z6XRK.2RTE2DFC16TDA@kernel.org>
-In-Reply-To: <DFTC434Z6XRK.2RTE2DFC16TDA@kernel.org>
-X-ClientProxiedBy: LO3P265CA0029.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:387::7) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:488::16)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A0344CF54;
+	Tue, 20 Jan 2026 16:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768925344; cv=none; b=KdsYD1IPJXRWIbv/+39L73F6m04hMAVgeb63F7q4ZVRRgjMKlHe2ugFHXHPsN2E/VZbQljeRLv9mUtNSVwKVwUDZwrVW0Tfqe+4JLunjDEpn/4JgTtn7Uwnzdfh7JA+8qkFK0Yor2m6TxaCPkn/etYJnQi3iJ3ygRzeEvHA2upI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768925344; c=relaxed/simple;
+	bh=0rIs6thx3jDKb/dI+dzD7t5H6DNv9t1pVMHjiruS7ns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ffmen9Qap//ByUkTMK+D1K2VkjsEd9DFIwb62C7OsncmCep9Zx+F+NoOIzdMevKRl0rlTH5uEamD22RwM3Cq+t1fQmDjJi3ABlcv590SYFhFqtpLN4ex3OALSa0brIGpkT4VXQrzV02L+bEKSWt6vYoPodSdyahpK2pEMMKP52s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KDJga7K0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [20.236.11.102])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2544020B7167;
+	Tue, 20 Jan 2026 08:09:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2544020B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768925342;
+	bh=iIZ7bzfOU+32o456dducA6V77xDpYZ8q7ZzTpg2VDtM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KDJga7K0N+4P68lcEAZIkzvNWr/d4a4erZoM6A9oDmUjDtDW8qpeY2QlJaVLNMMho
+	 AjVJWrCGPrMN01TJa64q6v0vAEqXHMR6+xcTbpJMwqsm9W/h3tQqNtNaYNf0kDWpBb
+	 Npz5ZO5vyjcIirlciM5xur4auzAEdCskgnwCgqtk=
+Date: Tue, 20 Jan 2026 08:09:02 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
+	romank@linux.microsoft.com
+Subject: Re: [PATCH v0 06/15] mshv: Implement mshv bridge device for VFIO
+Message-ID: <aW-oniY3VpagQMPb@skinsburskii.localdomain>
+References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-7-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO3P265MB2251:EE_
-X-MS-Office365-Filtering-Correlation-Id: c19cb395-9627-45e4-304c-08de583cefdd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Slo3UnNnZnpKWGJPUUFPNUJDMlByVEFQVkg1c1k5NDN1dVAxdHMyQTVPRzZq?=
- =?utf-8?B?aDNuSUlhbWlKdzlGQzZHYTRneXBjYUk2T0Uyek5wcUNmYStJNFNzak9RTjJL?=
- =?utf-8?B?MFBvSk1odDZNckRoQlFiSVhST1lFU21PMkxVcWk5SGtKaFRzYkc0dUpiZ0pn?=
- =?utf-8?B?NnJpR1B2Tm1sT2hsYUJ0dlZkdThhTk5MakVqNWtCYnFTRXBEdHBaTnBwSnZW?=
- =?utf-8?B?bVNrWWZOTUVMMWpTeUFIblZDRG1QaTZiSDZsZWVNU1NKWElQQ25ndFdDTi9N?=
- =?utf-8?B?Q0tFU0pOSXpWZEZHdS93MjRBSXBaVHRNYUtWeGxKVzFNRG1FaFRwSXdZOCtm?=
- =?utf-8?B?NE4vdHo3NnA2SkdOUnlXdFZCTFFCWit2NmM3SER2dEt3SjBXVWJMT3h4QU5N?=
- =?utf-8?B?Y254QUc1aGVzZ1FXc0pqKzBudzBzY1FkMkNyNVVxNWxYL3Z4SDJsOE1FTXYr?=
- =?utf-8?B?cUE1K3Z5ZnF4czJ3cGM0bFBkQy9mVmRUemQ1SEdNNFhLaC9BaW51YUl4YU1I?=
- =?utf-8?B?YURaZ01GVVN3R0plNDJydzEvQThMV3VwVzlWbERHVzNDM0prbzVIaEgwd2Vv?=
- =?utf-8?B?eThRd3I1Vm1DVE0yOGZCdk1FZi85a3psRDFtTmQ4d3RMTlVlUmp2RmJIRGt6?=
- =?utf-8?B?cFdJTERMdjY5T3ptaytzRkpCZ05hYnFXMFZtYkZaT1RYUlYzcm5RVCtCNE92?=
- =?utf-8?B?bWVxRGVkampCTm15SVpnQURjR1ZiOVJOeDIxTkF0UlFpbFFIVEU5TWw4b3pt?=
- =?utf-8?B?bExoMG9za2dneVd1a3BHV2JrRFZIU1FkazBkNkVpZXNFQ2htSFoyUU1Yam5C?=
- =?utf-8?B?V3Z6dXhYakpDN0tiTm9IS1BXTHNOUjNZT2ovQzJRZWF4Smt4VEZSVXM4N0ZL?=
- =?utf-8?B?dHY1dU94eXJsMEFqOWNFdlkzUTJOUko2anNjVGkrUXlLQW9BNGFzWDZBc0Y0?=
- =?utf-8?B?SithanZFRmlXeU1VNUhLemFKZXEzUWFPOUNLT0NjT0FiTVp3aXFST2oxWWlu?=
- =?utf-8?B?TlpUSGhEQW5KOTN3QVpJTHZJMjZpUFJGL1N5eHRMZTV2dUFtaVBHNzNiUUZS?=
- =?utf-8?B?cUdMdUNZQm81d2s0OHVPWVFja0FSeUJzNExGcmdrTnhUcW1qYmJ3ckh2clFY?=
- =?utf-8?B?TnpVbTJIVGJud29xNlZuOTNOU3V1Q0Vpa3lOL2ZibEREc29jMWg4cy96cXlF?=
- =?utf-8?B?b3VFelhUUHRmRjU1bHk4bzhpbG5FUTNYcjdBSTI0OEpNaTJEQjNJcE1ZZ2Yy?=
- =?utf-8?B?WEs5M3VHTHM1bmk1RldDSUtwWU1ubUVDZkxNZDNPdm1YVlRhdWozRUNrWGNa?=
- =?utf-8?B?aE1LRkFINGVYclFlZWdWNjdrdTB3dXo1NWJBa2Y4Mng5VFV5ODV5Yk50YnYz?=
- =?utf-8?B?UTBqaDQrYkZyK3dRamt0cFBxWXhwZExMQ0Y2TXRqSnF0TlF5QU9OeHdiVTdN?=
- =?utf-8?B?cTB2dmIvU2xjZWhGRUxJMnpyWW5ESnB2VUljdklKN2FUM24vcElXRHRQZ0JU?=
- =?utf-8?B?cUV2cUN2ZXRybC9HWUZvbmRKaWNVRzJqRHVtL3Z1Y1hybHBKN2ZDU1JWU25z?=
- =?utf-8?B?dDQwTldCdURIN01jWmgvOHdFZEdpVXNMRXVyMU9kamJUcjRLRGZJNGM5ZWd0?=
- =?utf-8?B?ZmJiQ0x0dS9SaitBWTdHVlB1a1hLeTV4OW5EOVc4ZENuVTVEaWtsOWd2Mk5h?=
- =?utf-8?B?YXV3dU5VRW5FZEc0eUxxb2tlY29ZTm5lRHRyZURRM2V4V3VmKzgrWXR1R1FI?=
- =?utf-8?B?RVhseER0bzFEZmwxVnp4bzBRTE9FYlppRGdmK29JOER4a1kySk5FajlHdkM2?=
- =?utf-8?B?MzJOT1ZRem4rS1FCa2hFSWs5R0RVSW9FYVIxbFBMMlMvWFZkUEF1Y24rNHdP?=
- =?utf-8?B?bFVGa2d5MlFCdkJCb1ZHenRlRWZ6WEFwTEwvSXVyY3I5d0pySjlkZ1dkcTcy?=
- =?utf-8?B?TGxCT3oyMUdSbmlXQjl1WGpLV1hIQlcrOGthbzZIaUpOajVSVjNPYnRNOWR1?=
- =?utf-8?B?YnpGbVdrTC9lbjdpWlZXbVhXTTVhZ2FjVkVRNVBUVEl2bGtQMEFMbVpvYTBt?=
- =?utf-8?B?bkFTUkxKdWNsNk5sdVBRV1ltR2p0cGlqWjd4NkdOT3MrRUVUejNZTUxQbW1H?=
- =?utf-8?Q?Cv14=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cy95VG81UndSaDZLclpOOStyemUvWDQ5bFBZQVpFaXkvdmcwakZPSHJ2RlZw?=
- =?utf-8?B?bTd3cVkvWldUUXVIMm1WZnJ5L3Y1blhlTXdvbnpnUm1pa0pzSiszMlBTbjhw?=
- =?utf-8?B?dFByc3dlZWlTZmNPSFFIdXdEdjJCR3NKRXJEMjdxWXlBbWNQMjhSTkJvakYr?=
- =?utf-8?B?U1Zpd2N2V0pmdXBCTVFlNWY2eHZWZmpwQ214VVdROXBXdEZxSCtyaTB1NnFj?=
- =?utf-8?B?TWN5cXhCQk9YWnBSdDNua0tyM1FnN2FmQTZXUnh4dXk5U1M1Y2ZPVmFzWG1O?=
- =?utf-8?B?QjVpUnBmZkFpV3pvS0prTFhFK3pDTG4yWmlONTY4aXJJM2dobXozNGxPeDdO?=
- =?utf-8?B?NnQxaDd5RE9wZk1pcDJ5UG5IYkRLQzNkcWFVVXlDVmN0bDhJeDdKSmlmSHRv?=
- =?utf-8?B?b21nQXRsa2pmS2ZIby9uaEZLN055Ykd6OFI5VWN0SlFCbGJwbWh0K1R2RlVS?=
- =?utf-8?B?VlNjKytXelhzbGtxUnpER2lHNmxUdkh5QjVTMkNUUVdNaUNJVU5DdGpaMkVR?=
- =?utf-8?B?TVR0ZjFMSjVrZEUxREFGc0FCK2lpVWhROG5DMkRFdFUySHRMVUVJb1YraTQ5?=
- =?utf-8?B?NDFoMXBhU0dDUVdGbkRhdFM2b3ZHRSt5QlFrdng0N251eGlndkRUSWlCVmVB?=
- =?utf-8?B?OGlLcXVadVpmTmZyVlpJcWNIYkIwSER6bFdJR2dMd0Z4UFZhL1VIc0ZqK1Vr?=
- =?utf-8?B?V2pJWWt3WDZJbDNhRzhGMkdUYVFoMTMyaWxWTTJwb2Z6N2kyNE9XTTlFV0JW?=
- =?utf-8?B?aTQ2c0tJUWtrQTRxenlweDdCdTFXaHVsQVpOSWcxdGZnUUY4d3pPVDAvSWtq?=
- =?utf-8?B?bEovWStoOVlsaXJ1RmFDOEhBM3R0ekhuZVB5T3AzemlQenBYWDlIcDBCRXJi?=
- =?utf-8?B?SXp3L0trSmNhSW92eFZsOEovVGVBdDBRdXNBWUxSSE9ML2dTTzNpZzRVaWtp?=
- =?utf-8?B?Z2Z1Q2dsU3pjYm1ORUx5c2lJUmpOaVVkWFV6dGpOeW5CdmV4K2FNekUyTmF6?=
- =?utf-8?B?ZHNnenBqMnpBZXlLWDhac0xTZ25FQWVNYXJ4NjFWM3RKZWtMSWsvSmVBVmtZ?=
- =?utf-8?B?QnlJQ2pzNWwyaTBhejBDNkpLUS90YWdRVVc1K1VpK05oWVlxbkluQnk4QUsx?=
- =?utf-8?B?K1B5OUJqVFRkajUzN2lZTStCTmFGL21vOHlrMTVzcTFrWkQvM1lOTnk3K0Ny?=
- =?utf-8?B?eG1mczVOUytTeFB4ZVRraS9EelI0RHYwcVJUUnV2bmFVYUJLdmc5VWJlWE1R?=
- =?utf-8?B?QXJ2d3dXNmhPKzc4czZRSnBQQUJVUCt3Y09odjVXeEhXUmR1cWlJbU56ZGVB?=
- =?utf-8?B?TlF5b0VBaWNYbkg3RmE2Zm9ydW84WHN1U21uUW5xNjFjUzlBUzNTdWYxK2tU?=
- =?utf-8?B?eVRFTU14OTN3ZnM0SFc4aERnYUVlR3BWM2l1STBzZFVJWklHNGYyTGdBbXkz?=
- =?utf-8?B?L3RxbEVZeHNFTWs1UkNXY09BbnEwMlZMaXlPSzFiQ0pVZGpjY1ROVHpRc1ht?=
- =?utf-8?B?ZlpGTjkxeGV4TTBhUzV2MklKWnc1ZUk5NWtFSXp0dmxvZVlIeVIxTHAxTWE0?=
- =?utf-8?B?WFN0TWowM0tzdE1IWTJTNVhkSlFsNTA5eCs2VFh0aG1zUlJKNGtzWVQ4K3NK?=
- =?utf-8?B?WngvYlJJUER5U055MHVRcFlpODhTbUpqNkVNWDNUZXhVMlFoSmM4WHMwR3BL?=
- =?utf-8?B?Z0k3MllNMUhOOWhWUTgzY0U5OFJPMHJtV01KMDBvNHM5a2VkMUpQdFFLVzVL?=
- =?utf-8?B?ZzVuczA4SXpwZEtpUnRhM09OU2oxZk9OVUtvSWc1c0JYL2VzdHJsUFN3bGlQ?=
- =?utf-8?B?ZnZLRkpRR3pjSjVSc0MyeDdyMHlHTWJUVS9ERXRzTUx2V09vUmFseWdydGxu?=
- =?utf-8?B?ZVQyRnphS1EyMHdPS1dpWDA2WWd1VjcvY294SGJGUXk5Z3dyb25Xc0N6Qzdp?=
- =?utf-8?B?eG96M3hZUGRpaU5aNkxML2FzZUZsNXQrQzRFZ01pYUgwWGtHYzV4NlppTUVI?=
- =?utf-8?B?RGFXdC9ocXlSQzdrR3lJRnVwLzNPQlNocFRpbTNJR3hpbmhPUDhGaUFCVDIy?=
- =?utf-8?B?dG9vNVBvaGRtUXV5c0Yya1NXenpITk9IQmNScThnN2kwTW95N1kySjluN21x?=
- =?utf-8?B?KzdXZjhydlZiN004NGlwRHQwbExGV3BjMXlVeUdqdjBZTkNHUkRnVno4ZTBC?=
- =?utf-8?B?amNuMzVlZW40YVoraSttd0xJcWJ3YkFBSlNRSURTRHh4M0ZvaW9hWTZUaSts?=
- =?utf-8?B?NVF0S3lNaHVXNEFuMkU4MWN4WVYydU9NYlRjKzhyaHZ4VXgzNmVERDdEK1Q5?=
- =?utf-8?B?NVRaNmFKSkF1UXZkTWVvZ1hHTUFuY2tJWVZWdjFBS1BRcWtScGlJQT09?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: c19cb395-9627-45e4-304c-08de583cefdd
-X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2026 15:59:47.9440
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M9NqIkPiWK/1aBB0POR3XM0zrjn7swt4wrHmclxZxDafkLBdPbJ81eeFPLEHM03aWZ/woDBDYDVUjXIqGbqULQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO3P265MB2251
-X-Spamd-Result: default: False [1.54 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260120064230.3602565-7-mrathor@linux.microsoft.com>
+X-Spamd-Result: default: False [-1.96 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-45283-lists,linux-pci=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	TAGGED_FROM(0.00)[bounces-45284-lists,linux-pci=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[nvidia.com,vger.kernel.org,google.com,kernel.org,gmail.com,garyguo.net,protonmail.com,umich.edu,posteo.de,collabora.com];
+	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
 	RCPT_COUNT_TWELVE(0.00)[29];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[garyguo.net,none];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pci@vger.kernel.org];
-	DKIM_TRACE(0.00)[garyguo.net:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-pci@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pci];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,garyguo.net:mid,garyguo.net:dkim]
-X-Rspamd-Queue-Id: C33F647C9E
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,skinsburskii.localdomain:mid,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 9770F488F9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue Jan 20, 2026 at 10:12 AM GMT, Danilo Krummrich wrote:
-> On Tue Jan 20, 2026 at 9:04 AM CET, Alice Ryhl wrote:
->> On Mon, Jan 19, 2026 at 10:22:44PM +0200, Zhi Wang wrote:
->> Overall looks good to me. Some comments below:
->>
->> I still think it would make sense to have `IoCapable<T>: IoTryCapable<T>=
-`,
->> but it's not a big deal.
+On Mon, Jan 19, 2026 at 10:42:21PM -0800, Mukesh R wrote:
+> From: Mukesh Rathor <mrathor@linux.microsoft.com>
+> 
+> Add a new file to implement VFIO-MSHV bridge pseudo device. These
+> functions are called in the VFIO framework, and credits to kvm/vfio.c
+> as this file was adapted from it.
+> 
+> Original author: Wei Liu <wei.liu@kernel.org>
+> (Slightly modified from the original version).
+> 
 
-Ah, I sent out my review without realizing that Alice is purposing the same=
-.
+There is a Linux standard for giving credits when code is adapted from.
+This doesn't follow that standard. Please fix.
 
->
-> I think with this approach it's not necessary to have this requirement. I=
-n
-> practice, most impls will have both, but I think it's a good thing that w=
-e don't
-> have to have an impl even if not used by any driver, i.e. it helps avoidi=
-ng dead
-> code.
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> ---
+>  drivers/hv/Makefile    |   3 +-
+>  drivers/hv/mshv_vfio.c | 210 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 212 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/hv/mshv_vfio.c
+> 
+> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> index a49f93c2d245..eae003c4cb8f 100644
+> --- a/drivers/hv/Makefile
+> +++ b/drivers/hv/Makefile
+> @@ -14,7 +14,8 @@ hv_vmbus-y := vmbus_drv.o \
+>  hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+>  hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+>  mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
+> -	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
+> +	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o \
+> +               mshv_vfio.o
+>  mshv_vtl-y := mshv_vtl_main.o
+>  
+>  # Code that must be built-in
+> diff --git a/drivers/hv/mshv_vfio.c b/drivers/hv/mshv_vfio.c
+> new file mode 100644
+> index 000000000000..6ea4d99a3bd2
+> --- /dev/null
+> +++ b/drivers/hv/mshv_vfio.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * VFIO-MSHV bridge pseudo device
+> + *
+> + * Heavily inspired by the VFIO-KVM bridge pseudo device.
+> + */
+> +#include <linux/errno.h>
+> +#include <linux/file.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/slab.h>
+> +#include <linux/vfio.h>
+> +
+> +#include "mshv.h"
+> +#include "mshv_root.h"
+> +
+> +struct mshv_vfio_file {
+> +	struct list_head node;
+> +	struct file *file;	/* list of struct mshv_vfio_file */
+> +};
+> +
+> +struct mshv_vfio {
+> +	struct list_head file_list;
+> +	struct mutex lock;
+> +};
+> +
+> +static bool mshv_vfio_file_is_valid(struct file *file)
+> +{
+> +	bool (*fn)(struct file *file);
+> +	bool ret;
+> +
+> +	fn = symbol_get(vfio_file_is_valid);
+> +	if (!fn)
+> +		return false;
+> +
+> +	ret = fn(file);
+> +
+> +	symbol_put(vfio_file_is_valid);
+> +
+> +	return ret;
+> +}
+> +
+> +static long mshv_vfio_file_add(struct mshv_device *mshvdev, unsigned int fd)
+> +{
+> +	struct mshv_vfio *mshv_vfio = mshvdev->device_private;
+> +	struct mshv_vfio_file *mvf;
+> +	struct file *filp;
+> +	long ret = 0;
+> +
+> +	filp = fget(fd);
+> +	if (!filp)
+> +		return -EBADF;
+> +
+> +	/* Ensure the FD is a vfio FD. */
+> +	if (!mshv_vfio_file_is_valid(filp)) {
+> +		ret = -EINVAL;
+> +		goto out_fput;
+> +	}
+> +
+> +	mutex_lock(&mshv_vfio->lock);
+> +
+> +	list_for_each_entry(mvf, &mshv_vfio->file_list, node) {
+> +		if (mvf->file == filp) {
+> +			ret = -EEXIST;
+> +			goto out_unlock;
+> +		}
+> +	}
+> +
+> +	mvf = kzalloc(sizeof(*mvf), GFP_KERNEL_ACCOUNT);
+> +	if (!mvf) {
+> +		ret = -ENOMEM;
+> +		goto out_unlock;
+> +	}
+> +
+> +	mvf->file = get_file(filp);
+> +	list_add_tail(&mvf->node, &mshv_vfio->file_list);
+> +
+> +out_unlock:
+> +	mutex_unlock(&mshv_vfio->lock);
+> +out_fput:
+> +	fput(filp);
+> +	return ret;
+> +}
+> +
+> +static long mshv_vfio_file_del(struct mshv_device *mshvdev, unsigned int fd)
+> +{
+> +	struct mshv_vfio *mshv_vfio = mshvdev->device_private;
+> +	struct mshv_vfio_file *mvf;
+> +	long ret;
+> +
+> +	CLASS(fd, f)(fd);
+> +
+> +	if (fd_empty(f))
+> +		return -EBADF;
+> +
+> +	ret = -ENOENT;
+> +	mutex_lock(&mshv_vfio->lock);
+> +
+> +	list_for_each_entry(mvf, &mshv_vfio->file_list, node) {
+> +		if (mvf->file != fd_file(f))
+> +			continue;
+> +
+> +		list_del(&mvf->node);
+> +		fput(mvf->file);
+> +		kfree(mvf);
+> +		ret = 0;
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&mshv_vfio->lock);
+> +	return ret;
+> +}
+> +
+> +static long mshv_vfio_set_file(struct mshv_device *mshvdev, long attr,
+> +			      void __user *arg)
+> +{
+> +	int32_t __user *argp = arg;
+> +	int32_t fd;
+> +
+> +	switch (attr) {
+> +	case MSHV_DEV_VFIO_FILE_ADD:
+> +		if (get_user(fd, argp))
+> +			return -EFAULT;
+> +		return mshv_vfio_file_add(mshvdev, fd);
+> +
+> +	case MSHV_DEV_VFIO_FILE_DEL:
+> +		if (get_user(fd, argp))
+> +			return -EFAULT;
+> +		return mshv_vfio_file_del(mshvdev, fd);
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static long mshv_vfio_set_attr(struct mshv_device *mshvdev,
+> +			      struct mshv_device_attr *attr)
+> +{
+> +	switch (attr->group) {
+> +	case MSHV_DEV_VFIO_FILE:
+> +		return mshv_vfio_set_file(mshvdev, attr->attr,
+> +					  u64_to_user_ptr(attr->addr));
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static long mshv_vfio_has_attr(struct mshv_device *mshvdev,
+> +			      struct mshv_device_attr *attr)
+> +{
+> +	switch (attr->group) {
+> +	case MSHV_DEV_VFIO_FILE:
+> +		switch (attr->attr) {
+> +		case MSHV_DEV_VFIO_FILE_ADD:
+> +		case MSHV_DEV_VFIO_FILE_DEL:
+> +			return 0;
+> +		}
+> +
+> +		break;
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static long mshv_vfio_create_device(struct mshv_device *mshvdev, u32 type)
+> +{
+> +	struct mshv_device *tmp;
+> +	struct mshv_vfio *mshv_vfio;
+> +
+> +	/* Only one VFIO "device" per VM */
+> +	hlist_for_each_entry(tmp, &mshvdev->device_pt->pt_devices,
+> +			     device_ptnode)
+> +		if (tmp->device_ops == &mshv_vfio_device_ops)
+> +			return -EBUSY;
+> +
+> +	mshv_vfio = kzalloc(sizeof(*mshv_vfio), GFP_KERNEL_ACCOUNT);
+> +	if (mshv_vfio == NULL)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&mshv_vfio->file_list);
+> +	mutex_init(&mshv_vfio->lock);
+> +
+> +	mshvdev->device_private = mshv_vfio;
+> +
+> +	return 0;
+> +}
+> +
+> +/* This is called from mshv_device_fop_release() */
+> +static void mshv_vfio_release_device(struct mshv_device *mshvdev)
+> +{
+> +	struct mshv_vfio *mv = mshvdev->device_private;
+> +	struct mshv_vfio_file *mvf, *tmp;
+> +
+> +	list_for_each_entry_safe(mvf, tmp, &mv->file_list, node) {
+> +		fput(mvf->file);
 
-I think whether there's a runtime bound checking and whether a IO size is
-supported are two orthogonal things, I would rather we have a single series=
- of
-`IoCapable<T>` to just indiate the latter and still keep the `IoKnownSize`.
+This put must be sync as device must be detached from domain before
+attempting partition destruction.
+This was explicitly mentioned in the patch originated this code.
+Please fix, add a comment and credits to the commit message.
 
-Best,
-Gary
+Thanks,
+Stanislav
 
 
->
->>> +    /// Infallible 64-bit read with compile-time bounds check.
->>> +    #[cfg(CONFIG_64BIT)]
->>> +    fn read64(&self, offset: usize) -> u64
->>> +    #[cfg(CONFIG_64BIT)]
->>> +    fn try_read64(&self, offset: usize) -> Result<u64>
->>
->> These don't really need cfg(CONFIG_64BIT). You can place that cfg on
->> impl blocks of IoCapable<u64>.
->
-> If you agree with the above, I can fix this up when applying the series.
-
+> +		list_del(&mvf->node);
+> +		kfree(mvf);
+> +	}
+> +
+> +	kfree(mv);
+> +	kfree(mshvdev);
+> +}
+> +
+> +struct mshv_device_ops mshv_vfio_device_ops = {
+> +	.device_name = "mshv-vfio",
+> +	.device_create = mshv_vfio_create_device,
+> +	.device_release = mshv_vfio_release_device,
+> +	.device_set_attr = mshv_vfio_set_attr,
+> +	.device_has_attr = mshv_vfio_has_attr,
+> +};
+> -- 
+> 2.51.2.vfs.0.1
+> 
 
