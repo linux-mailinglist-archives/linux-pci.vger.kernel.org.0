@@ -1,249 +1,185 @@
-Return-Path: <linux-pci+bounces-45244-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBF85D3BFA8
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 07:52:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08127D3C26D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 09:45:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ED6913C2F5B
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 06:48:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0B413600707
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 08:22:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5863E3A1E6B;
-	Tue, 20 Jan 2026 06:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAB73AE6F7;
+	Tue, 20 Jan 2026 08:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nPKgQKZQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wrDqE1EJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E39F39A808;
-	Tue, 20 Jan 2026 06:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30043B8BDB
+	for <linux-pci@vger.kernel.org>; Tue, 20 Jan 2026 08:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768891439; cv=none; b=CBZ/Lq9U7EMfcIslagKnc93PUcJBQbb4zbp5BiGs0G7YKObVB+Eo7YQd6PakzcdxJUCcZ8FlHDRjWHZn+dkkmUzaDYlzoHXm1CY4C51P0gvXLD+38dCAYWLVHxGWzN0aryjCrlHh+V/7QWKStHGqXJoDFQ98bVa/pOPdLEdExW4=
+	t=1768896664; cv=none; b=IUbQ3Ak7bkD9oVJ8f70rH0O7k/wrA/hwMYCjvKV3ps8Qgvbq84lUGr6ZtNvyLcEJwQUtLU+Qsxr4Nlooc885SXHBRfQlzWo4uzR71BHKwsDg1imzrJ5tb3q+RtLpMhW0AF4wXKsexkwNwW4fAwKX7O/9enYZcMMTV9v6HfsTkec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768891439; c=relaxed/simple;
-	bh=lFCdL+6ojHEEiti/5oEEzqcHgGMBpFffGSnL89hXCKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qxZlcLg2Wr0qLWDvrQaALZ36fBW02RT7W0VVjtMf9dPxu8RAi5ODLdxPbFq6n2wPqWdcXN8hhoHNhSp0JV+fYKkxm5HQT4gvO610c12OrzDkjK22tK0ShswihaAFdveyU8LUS9k8sIwkSCzJnXrKNI4jji54/ZRxrKx0GHhJcuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nPKgQKZQ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 795D320B716D;
-	Mon, 19 Jan 2026 22:43:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 795D320B716D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768891431;
-	bh=vwKC6HwtuqTh63I/EcCnX9kz02TP/FLMLkDGVcBN5Jg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nPKgQKZQP36at7Pw9ekyrrLYOUWnS9INVzf/0p/e0spMOrWzbrSFIdbBIYmCgu9Yl
-	 48+3TE7z+OgQ6l8v5rUbjC5ExL0L5TS/agbqGuSQ32EEIyWVA0e4BzSdoH7oe9rgAX
-	 6TseUo1oxO/Z0ZpmEfj8TIL4CIuSoguKL/aCkpmA=
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	joro@8bytes.org,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	arnd@arndb.de,
-	nunodasneves@linux.microsoft.com,
-	mhklinux@outlook.com,
-	romank@linux.microsoft.com
-Subject: [PATCH v0 15/15] mshv: Populate mmio mappings for PCI passthru
-Date: Mon, 19 Jan 2026 22:42:30 -0800
-Message-ID: <20260120064230.3602565-16-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.51.2.vfs.0.1
-In-Reply-To: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
-References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1768896664; c=relaxed/simple;
+	bh=P+SC1Lv8GtKFMmDmSP1puIAFS8fxxtphwLdKaMU0tBM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZVrHlBEboof557hIbIATe41aKse9d7EVBj9/ZI3rDv+WlVBWUVSSLyOJgZejZGPtVraiq2hxHco67a7pEU4ZrcDEc5+/6K7n35VPOLNRKB+OvtarKjcbJRB6yTPZqABXbvU8PnmwZD+FEH0VdhIZPaiZCMDaLBQeBZJxtaxbJnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wrDqE1EJ; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b871e14de77so1230732266b.2
+        for <linux-pci@vger.kernel.org>; Tue, 20 Jan 2026 00:11:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768896661; x=1769501461; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m4fFtv+H37c+9JHNHcFH2S2lHNgEGMW4y4wNCwUNdFE=;
+        b=wrDqE1EJVkL3N/rsFq/LO+Z70VvTe65FznBb1G3/Z6FuT7Rchu2cFhbV0YCZgWwSbD
+         /c46y2TDpLJ+QgvS7AiQiMLuN/yzyDG855HyBuqeJXxWTR/NndntXkafPscLHiw11Awa
+         ggyejAdp3Q7AvsNFzwpsysB7uEH80OmiI9gprG+cWSslMTfJMnLgtRww7EhzHXaB9sLP
+         EXv6t1A2mt19UYqedJ+q2oEujMx5cPm0nD4Rs6BtBdJCFtoPYRyHAX0RFbFfjHDx4CCy
+         Vd27dNlt/x1sKbcJZr5Z3IItpsMCsKO+41knjlqsJURLPrzOsjp2C0NEXLVnkEpPHnN2
+         TqXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768896661; x=1769501461;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m4fFtv+H37c+9JHNHcFH2S2lHNgEGMW4y4wNCwUNdFE=;
+        b=je4UmdVm1e2JC6HdUOlulyBo9Nva4KqvPfXpoqBieQDQskMG7I90ckOfbOOiJIv4Vz
+         trFoy8GXcw/OG4JLs8NeP0KgfqOdOmJ2WjdyZO3QBCz5+F88ZP4ow9Rzk5huQzA+Z753
+         QWY3qVdpxws1eL/GL68g7xv6j8K3Kj7cCxjIg98Nqj7taLkkECPkamVHN/py9rqthaoe
+         QqtOUoVgWgB+iRMeOJuFMmjWC9CEMEdKJf7BbbQ9K0bywyxKJHP47/gquzmJ4KpHY+CE
+         d8Isfhl+y62pYglzUwhMW7nOlxfh6tLfpJBrU5T5tX7D6vQ/LUtY9iAcnSMiQkZn2hY0
+         HJSA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1hd6p25f9+NXBoKRQHzSg87sEfC2sFWGOxzgHsP0hJRQxmjcG+9w835RnrWKYehPhKqLwHlL5Yrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcBshyPrAlmasm+3KxhI70E4O4FbyNpftj5cnEnXii+bVHQrZB
+	4p7WmCXwon4S/GZSvmEvApSNkHjif8KjrbxBCavtW4A4it4T9DsStsNBDVSI8ZQaRvYx+I9uRr+
+	OoQP8BXlGnN3Jm8Zecw==
+X-Received: from wmgb2.prod.google.com ([2002:a05:600c:1502:b0:477:9801:6a64])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3e0d:b0:479:3a86:dc1c with SMTP id 5b1f17b1804b1-4803e803c1amr13091405e9.36.1768896286451;
+ Tue, 20 Jan 2026 00:04:46 -0800 (PST)
+Date: Tue, 20 Jan 2026 08:04:45 +0000
+In-Reply-To: <20260119202250.870588-3-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260119202250.870588-1-zhiw@nvidia.com> <20260119202250.870588-3-zhiw@nvidia.com>
+Message-ID: <aW83HV4lVR5MQlDd@google.com>
+Subject: Re: [PATCH v10 2/5] rust: io: separate generic I/O helpers from MMIO implementation
+From: Alice Ryhl <aliceryhl@google.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dakr@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	markus.probst@posteo.de, helgaas@kernel.org, cjia@nvidia.com, 
+	smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, 
+	kwankhede@nvidia.com, targupta@nvidia.com, acourbot@nvidia.com, 
+	joelagnelf@nvidia.com, jhubbard@nvidia.com, zhiwang@kernel.org, 
+	daniel.almeida@collabora.com
+Content-Type: text/plain; charset="utf-8"
 
-From: Mukesh Rathor <mrathor@linux.microsoft.com>
+On Mon, Jan 19, 2026 at 10:22:44PM +0200, Zhi Wang wrote:
+> The previous Io<SIZE> type combined both the generic I/O access helpers
+> and MMIO implementation details in a single struct. This coupling prevented
+> reusing the I/O helpers for other backends, such as PCI configuration
+> space.
+> 
+> Establish a clean separation between the I/O interface and concrete backends
+> by separating generic I/O helpers from MMIO implementation.
+> 
+> Introduce two traits to handle different access capabilities:
+> - IoCapable<T> trait provides infallible I/O operations (read/write)
+>   with compile-time bounds checking.
+> - IoTryCapable<T> trait provides fallible I/O operations
+>   (try_read/try_write) with runtime bounds checking.
+> - The Io trait defines convenience accessors (read8/write8, try_read8/
+>   try_write8, etc.) that forward to the corresponding IoCapable<T> or
+>   IoTryCapable<T> implementations.
+> 
+> This separation allows backends to selectively implement only the operations
+> they support. For example, PCI configuration space can implement IoCapable<T>
+> for infallible operations while MMIO regions can implement both IoCapable<T>
+> and IoTryCapable<T>.
+> 
+> Move the MMIO-specific logic into a dedicated Mmio<SIZE> type that
+> implements Io and the corresponding `IoCapable<T>` and `IoTryCapable<T>` traits.
+> Rename IoRaw to MmioRaw and update consumers to use the new types.
+> 
+> Cc: Alexandre Courbot <acourbot@nvidia.com>
+> Cc: Alice Ryhl <aliceryhl@google.com>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Gary Guo <gary@garyguo.net>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 
-Upon guest access, in case of missing mmio mapping, the hypervisor
-generates an unmapped gpa intercept. In this path, lookup the PCI
-resource pfn for the guest gpa, and ask the hypervisor to map it
-via hypercall. The PCI resource pfn is maintained by the VFIO driver,
-and obtained via fixup_user_fault call (similar to KVM).
+Overall looks good to me. Some comments below:
 
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
----
- drivers/hv/mshv_root_main.c | 115 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+> +/// Trait representing infallible I/O operations of a certain type.
+> +///
+> +/// This trait is used to provide compile-time bounds-checked I/O operations.
+> +/// Different I/O backends can implement this trait to expose only the operations they support.
+> +///
+> +/// For example, a PCI configuration space may implement `IoCapable<u8>`, `IoCapable<u16>`,
+> +/// and `IoCapable<u32>`, but not `IoCapable<u64>`, while an MMIO region on a 64-bit
+> +/// system might implement all four.
+> +pub trait IoCapable<T> {
+> +    /// Infallible read with compile-time bounds check.
+> +    fn read(&self, offset: usize) -> T;
+> +
+> +    /// Infallible write with compile-time bounds check.
+> +    fn write(&self, value: T, offset: usize);
+> +}
+> +
+> +/// Trait representing fallible I/O operations of a certain type.
+> +///
+> +/// This trait is used to provide runtime bounds-checked I/O operations.
+> +/// Backends that do not support fallible operations (e.g., PCI configuration space)
+> +/// do not need to implement this trait.
+> +pub trait IoTryCapable<T> {
+> +    /// Fallible read with runtime bounds check.
+> +    fn try_read(&self, offset: usize) -> Result<T>;
+> +
+> +    /// Fallible write with runtime bounds check.
+> +    fn try_write(&self, value: T, offset: usize) -> Result;
+> +}
 
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 03f3aa9f5541..4c8bc7cd0888 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -56,6 +56,14 @@ struct hv_stats_page {
- 	};
- } __packed;
- 
-+bool hv_nofull_mmio;   /* don't map entire mmio region upon fault */
-+static int __init setup_hv_full_mmio(char *str)
-+{
-+	hv_nofull_mmio = true;
-+	return 0;
-+}
-+__setup("hv_nofull_mmio", setup_hv_full_mmio);
-+
- struct mshv_root mshv_root;
- 
- enum hv_scheduler_type hv_scheduler_type;
-@@ -612,6 +620,109 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
- }
- 
- #ifdef CONFIG_X86_64
-+
-+/*
-+ * Check if uaddr is for mmio range. If yes, return 0 with mmio_pfn filled in
-+ * else just return -errno.
-+ */
-+static int mshv_chk_get_mmio_start_pfn(struct mshv_partition *pt, u64 gfn,
-+				       u64 *mmio_pfnp)
-+{
-+	struct vm_area_struct *vma;
-+	bool is_mmio;
-+	u64 uaddr;
-+	struct mshv_mem_region *mreg;
-+	struct follow_pfnmap_args pfnmap_args;
-+	int rc = -EINVAL;
-+
-+	/*
-+	 * Do not allow mem region to be deleted beneath us. VFIO uses
-+	 * useraddr vma to lookup pci bar pfn.
-+	 */
-+	spin_lock(&pt->pt_mem_regions_lock);
-+
-+	/* Get the region again under the lock */
-+	mreg = mshv_partition_region_by_gfn(pt, gfn);
-+	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
-+		goto unlock_pt_out;
-+
-+	uaddr = mreg->start_uaddr +
-+		((gfn - mreg->start_gfn) << HV_HYP_PAGE_SHIFT);
-+
-+	mmap_read_lock(current->mm);
-+	vma = vma_lookup(current->mm, uaddr);
-+	is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
-+	if (!is_mmio)
-+		goto unlock_mmap_out;
-+
-+	pfnmap_args.vma = vma;
-+	pfnmap_args.address = uaddr;
-+
-+	rc = follow_pfnmap_start(&pfnmap_args);
-+	if (rc) {
-+		rc = fixup_user_fault(current->mm, uaddr, FAULT_FLAG_WRITE,
-+				      NULL);
-+		if (rc)
-+			goto unlock_mmap_out;
-+
-+		rc = follow_pfnmap_start(&pfnmap_args);
-+		if (rc)
-+			goto unlock_mmap_out;
-+	}
-+
-+	*mmio_pfnp = pfnmap_args.pfn;
-+	follow_pfnmap_end(&pfnmap_args);
-+
-+unlock_mmap_out:
-+	mmap_read_unlock(current->mm);
-+unlock_pt_out:
-+	spin_unlock(&pt->pt_mem_regions_lock);
-+	return rc;
-+}
-+
-+/*
-+ * At present, the only unmapped gpa is mmio space. Verify if it's mmio
-+ * and resolve if possible.
-+ * Returns: True if valid mmio intercept and it was handled, else false
-+ */
-+static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp)
-+{
-+	struct hv_message *hvmsg = vp->vp_intercept_msg_page;
-+	struct hv_x64_memory_intercept_message *msg;
-+	union hv_x64_memory_access_info accinfo;
-+	u64 gfn, mmio_spa, numpgs;
-+	struct mshv_mem_region *mreg;
-+	int rc;
-+	struct mshv_partition *pt = vp->vp_partition;
-+
-+	msg = (struct hv_x64_memory_intercept_message *)hvmsg->u.payload;
-+	accinfo = msg->memory_access_info;
-+
-+	if (!accinfo.gva_gpa_valid)
-+		return false;
-+
-+	/* Do a fast check and bail if non mmio intercept */
-+	gfn = msg->guest_physical_address >> HV_HYP_PAGE_SHIFT;
-+	mreg = mshv_partition_region_by_gfn(pt, gfn);
-+	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
-+		return false;
-+
-+	rc = mshv_chk_get_mmio_start_pfn(pt, gfn, &mmio_spa);
-+	if (rc)
-+		return false;
-+
-+	if (!hv_nofull_mmio) {		/* default case */
-+		gfn = mreg->start_gfn;
-+		mmio_spa = mmio_spa - (gfn - mreg->start_gfn);
-+		numpgs = mreg->nr_pages;
-+	} else
-+		numpgs = 1;
-+
-+	rc = hv_call_map_mmio_pages(pt->pt_id, gfn, mmio_spa, numpgs);
-+
-+	return rc == 0;
-+}
-+
- static struct mshv_mem_region *
- mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
- {
-@@ -666,13 +777,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
- 
- 	return ret;
- }
-+
- #else  /* CONFIG_X86_64 */
-+static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp) { return false; }
- static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
- #endif /* CONFIG_X86_64 */
- 
- static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
- {
- 	switch (vp->vp_intercept_msg_page->header.message_type) {
-+	case HVMSG_UNMAPPED_GPA:
-+		return mshv_handle_unmapped_gpa(vp);
- 	case HVMSG_GPA_INTERCEPT:
- 		return mshv_handle_gpa_intercept(vp);
- 	}
--- 
-2.51.2.vfs.0.1
+I still think it would make sense to have `IoCapable<T>: IoTryCapable<T>`,
+but it's not a big deal.
 
+> +    /// Infallible 64-bit read with compile-time bounds check.
+> +    #[cfg(CONFIG_64BIT)]
+> +    fn read64(&self, offset: usize) -> u64
+> +    #[cfg(CONFIG_64BIT)]
+> +    fn try_read64(&self, offset: usize) -> Result<u64>
+
+These don't really need cfg(CONFIG_64BIT). You can place that cfg on
+impl blocks of IoCapable<u64>.
+
+e.g., remove above but keep here:
+
+> +// MMIO regions on 64-bit systems also support 64-bit accesses.
+> +#[cfg(CONFIG_64BIT)]
+> +impl<const SIZE: usize> IoCapable<u64> for Mmio<SIZE> {
+> +    define_read!(infallible, read, readq -> u64);
+> +    define_write!(infallible, write, writeq <- u64);
+> +}
+
+> +#[cfg(CONFIG_64BIT)]
+> +impl<const SIZE: usize> IoTryCapable<u64> for Mmio<SIZE> {
+> +    define_read!(fallible, try_read, readq -> u64);
+> +    define_write!(fallible, try_write, writeq <- u64);
+> +}
+
+Alice
 
