@@ -1,277 +1,211 @@
-Return-Path: <linux-pci+bounces-45287-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45288-lists+linux-pci=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mPtdO9HJb2mgMQAAu9opvQ
-	(envelope-from <linux-pci+bounces-45287-lists+linux-pci=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 19:30:41 +0100
+	id kEl6JL7Ib2mgMQAAu9opvQ
+	(envelope-from <linux-pci+bounces-45288-lists+linux-pci=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 19:26:06 +0100
 X-Original-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F608497B9
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 19:30:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3654F496B3
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 19:26:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2C03D5CC80B
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 16:28:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 233468087CC
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jan 2026 16:48:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B714A4779BB;
-	Tue, 20 Jan 2026 16:13:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2EC315D22;
+	Tue, 20 Jan 2026 16:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="F5fTmeb0"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NEdz+SQu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2D7531078B;
-	Tue, 20 Jan 2026 16:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768925638; cv=none; b=ga1yeDA+zxsFMKfTnvLENEgki4M2CTSVERnrc6Gbvw5qDG6Bwm0DT6jYn/XGvkY7hHue916rL3kQXZ2oiRHpWEPS1cHvoCEDPX7eh6DWBy75i+r9OGdNMgJ6E0oY8KVq64ds8cXN7le2Kuf1mwgOplgULha5L45MWojuWm3eZZc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768925638; c=relaxed/simple;
-	bh=xsjjUWsrEHOLFWe2BoC5SLfeDNDK/qtujNgUgM+Xs9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXP8DYDnUscuJFwX0e1klAd62oiBui3bJ0iV3SOHLnW2nI357KCkgrX6DXEGa3QLK+arIsLKkxD4zKfPA2G8EzRnyu/ggMJT+SZNJgAt84590beQa4aNkZ6FMBf5J1rt5RkdJBE7ENS2GQ8iQ+6BS0lPN/W2R3pVGH7YFK/lSGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=F5fTmeb0; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D96D220B716A;
-	Tue, 20 Jan 2026 08:13:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D96D220B716A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768925636;
-	bh=/Swnp5UxzGM1E07wXoCWuTUm5dNDFNjqw04IYItUiZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F5fTmeb0PykDmukATKeznivsbr5F+tiwHrBIXbSukB7u/I8XQMQr07lyn7T8HB+DC
-	 0Yu6Td8AvHMQu5KoktaRBGfu3OEDheGEkU1Sw9HqaN9f/pkYRdAt2lb4gKNw70hudj
-	 Z1+JJSU7NLIBgTC0La4WehEREThNXf/D1ERTikfY=
-Date: Tue, 20 Jan 2026 08:13:55 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
-	romank@linux.microsoft.com
-Subject: Re: [PATCH v0 07/15] mshv: Add ioctl support for MSHV-VFIO bridge
- device
-Message-ID: <aW-pw7GlQdFv-lf5@skinsburskii.localdomain>
-References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-8-mrathor@linux.microsoft.com>
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010060.outbound.protection.outlook.com [52.101.201.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F4A3E95B5;
+	Tue, 20 Jan 2026 16:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768927279; cv=fail; b=A9l3rkQ9L3apR3jO+8d5D5ju7SLJTXMJ3wCY9FyveWF23dIqeiOpO9Ij7KeLm5SgXDpD34eguTqZc1kUE3w58qrGp4GShB3z/7yoB/DVD13HZfIEDMMNzsvRtTHQo9NL/QpaA44ttxH3E0zuHQsqTBZh2GSpuO7V3DTRwtoZTWY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768927279; c=relaxed/simple;
+	bh=rVplmDL5JIEko9YyRNo639caoKoIzjy0/1DiSvrOL8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jQsrPO9MF0AdJaqUbAj41psbO0mc8JYGtcYLiBz62EHysUFHuEUZ2d3l5ggv5vHvSajXFa9gWMd97pfRVINXy02c5zq02r0npp1xuKFe/0xtY0krA+moP5sE/IYRgUo+/b0GhTAaqYrgT/fWxCuPSjtrqrPLReuGESDz6eAF2+g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NEdz+SQu; arc=fail smtp.client-ip=52.101.201.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XbKsq9F+93uWshkKEw9Q8E1YhuiPS+abNUlvjHp0fY8E8w4Hi1Fcac/YSBc2hra645P2Ec0S+M4fGjDcOwmhDvOpN58AlagPWktciTobR5WEF5o6x30dmT5jC7ekxT6PGBppnbCTbl4dxMCwSIBbLOfA3RZR5ytEsrjtaq7KiCd6faistnSf6o7LSFjDKURI8ekzk18E7UPFhZWYfYsdpriH2iktSRFIqYMadaS0kXWIPCwZvfwN+EHOPgum3GZ12kTDKqsZ/pJ/3EPv2p/Bx0KhFZcRNhglMGPlYcTd6x+b6Dzlsrz4WN/yqc4lLDGvA+dua9yd8CPGU+BMs74kjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OP1JOE/ga4Bp5UmgToUB2XnU/O6l85iybwojJhnQAhg=;
+ b=CjL/LR62Xpce1G407v5tQV6q35mcmIUzBjeZpveiDnv4g6/nBj0BZpHe8yV2HKyNZFyRAWfCyBUuThguH2NEpNCqbf+u8Y+P+Q5bUePR8p2npgRXsKt9za/DPOEuHFaCvfazH5jkpe073mzq3j+4NwJga6j+EX/tJkUs0PiR0M9MAZzr2bt0PvZKKq3wNIwL5/hvL775DzpEanI2V9cbVH3SG9wzcH2a6vmG0FwZWMvRsSah/vN26cKF5q7HCBZfs0oMlmRgMMXrSehUU5QwzT0wapxc22h/eRQoSlTNpcvqx7cXcKqxXYiH8SB/YSMwL/JClk693OEibyjjt5G9oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OP1JOE/ga4Bp5UmgToUB2XnU/O6l85iybwojJhnQAhg=;
+ b=NEdz+SQuXETuBuuV5mUyQUqRxKMG8BGInpsf+T0UsrbI/tkcqpt7aM2s2RUCGscNyDNW67kIW3mOAJxYAvUXHOl3eP5D1Wl4pf6qbMiIXlVtJryKlhB0YrmXaazGITruQHMhHK+Ykav5H+Owa20Xx2TrDrQx8GxUUM940u5R+lH3+a30z7iVFT6m7pTsj/d2u5jVWaMbTmAOv1OMKwJEyy4QxUcZGFEXlM7oseN3qLRBSerd1NOhJAdy4RVmeh0qhJLD8uQXqYFf3WXT3CFFBJoLe/Cj4jS5AISS9sdkm734PB+/5qZZpIAoaTQlXDTjQkwE/HEKjmgMVDutaQeUxw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by PH7PR12MB6441.namprd12.prod.outlook.com (2603:10b6:510:1fb::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.9; Tue, 20 Jan
+ 2026 16:41:13 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9542.008; Tue, 20 Jan 2026
+ 16:41:13 +0000
+Date: Tue, 20 Jan 2026 12:41:12 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Wei Wang <wei.w.wang@hotmail.com>
+Cc: bhelgaas@google.com, akpm@linux-foundation.org, bp@alien8.de,
+	rdunlap@infradead.org, alex@shazbot.org, kevin.tian@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: Add support for ACS Enhanced Capability
+Message-ID: <20260120164112.GD1134360@nvidia.com>
+References: <SI2PR01MB43931A911357962A5E986FFEDC8CA@SI2PR01MB4393.apcprd01.prod.exchangelabs.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SI2PR01MB43931A911357962A5E986FFEDC8CA@SI2PR01MB4393.apcprd01.prod.exchangelabs.com>
+X-ClientProxiedBy: BL1P222CA0010.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c7::15) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120064230.3602565-8-mrathor@linux.microsoft.com>
-X-Spamd-Result: default: False [-1.96 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH7PR12MB6441:EE_
+X-MS-Office365-Filtering-Correlation-Id: b6130edc-761f-449e-e004-08de5842b8ef
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tf2OUkNTiEUhnLRrw5pfAaB/8N6/SC+eviSwUXdUU0oJyP67vZ5CyoFZjdz0?=
+ =?us-ascii?Q?GzQxdHkHXWnB+1C9MRaacMKgaUpabrzGt03jDzTlRPL9BidLJiFijH59nf3/?=
+ =?us-ascii?Q?cdqQToGUBvyMARLEvLhSdHK+P/Fq3+vJ76uS9mYXVXOYzYaFVEqsscyXHzXn?=
+ =?us-ascii?Q?RjujWCeiBv7bq1CCR0RnVkxO3Iwdmf78atiHauf4kf2UyUIxn5saJnIw9NoM?=
+ =?us-ascii?Q?IZ5svo/hUTY0Z+lxBrOmp0AYVz5FCisyshUIKRMhH8HFYmX1RJGEb93/VOdc?=
+ =?us-ascii?Q?jT30scxJvLEMlnrEf1tYVgUVpuEITAYFbqdc1iHxGW3zSDAstZF7XlRpLYQE?=
+ =?us-ascii?Q?6aYstuo7mqQ+AEhqQC7ONPHnV5m+9QQEbNLj3r8kakfyou1U0JizdOjEzh7V?=
+ =?us-ascii?Q?AP2FguvOnzsMk/GFNlViBcsqRPUA32dGajEx8bD45mNRcuWe3tfi3P2YlrtL?=
+ =?us-ascii?Q?zoYz01TsHLGXi440eDOrs1YflsRsEMGL7tny0u+jWl5QSKnB5Ehjj0xO1D1y?=
+ =?us-ascii?Q?BwL9NyjmrC/cgFaIV8nJf+GhOtZRreebI9CVOx7cewwmFMNU4c66AzeijDHo?=
+ =?us-ascii?Q?V9tPeUUya5WUTPIAfwDX3ZNTPFkRhrXwyo3w+O0Mdw5K3VNc59yJWu8TbONH?=
+ =?us-ascii?Q?jkucsTkQViaRL5TvSmYeoju4FhaR6hPfzvTmd4z1TsSAoGZ7iepZDx3C737k?=
+ =?us-ascii?Q?09POdYuMgx4WIUW09nrGJvBmHvJJJQ/YE5GW4L5ArQ5q608fpQgiIJ8tiIPU?=
+ =?us-ascii?Q?Ay/pkmtKnnfTd+d1+XjNATIbR/Dwo7WsDl4bAv+lArtVQMBCYCFqsLLKZxgi?=
+ =?us-ascii?Q?NReLldvdDuwft2LK9Xkmn726mWib3ewVY4VdJLWgX2FzfeeOSH6IO2W0aOlm?=
+ =?us-ascii?Q?6/GZJ8fyZ6Cmbr2OwT1zqQl2lE0kVaXYxUfWWCOM5u9raht/zYqFfaoFkNVM?=
+ =?us-ascii?Q?j6zPBzMg3wyt5bz9iJDXRWjl6zMT7UtiF5MoqeRpcUi8sU5CPoTYvGhduzTR?=
+ =?us-ascii?Q?zzhC9yVn8lzapbLGz8G0pbWseDW4Y6WGe+cvaKF5Enbh7yO6IbkF5yarav2H?=
+ =?us-ascii?Q?Y6Z9I5pMatlmJBVO6zWq8Me1BbV49LkEGJTfmI3RlnX4MPJdl3LOXcd7HJBy?=
+ =?us-ascii?Q?QhPfSVA6LSxGOVqx/i1AAQAIVRaa2VGloSX+LPBBLp13ml7rT899RLH6CI9s?=
+ =?us-ascii?Q?XbflzGcBVJdiuxPM+SeidUuOSeHtp5NgFRaogzm0xwekAyuaPczXkcJrSPx7?=
+ =?us-ascii?Q?kXMKMZIzXbZkDaclMKBC3VV1/cNG/oNJBBQIuqNPqen00xzpOqiktYgINutR?=
+ =?us-ascii?Q?QytpIC/gfhLi3mOYvzuATCjfzgfGJABVa5NHr99xaxs5TbtJ9QrJIkiEedR4?=
+ =?us-ascii?Q?IwqGksneIRcmXdRi5lITXp7ki5m6oWMcsVteq9FUgg0rr9Tlrg+jMpkXvwu5?=
+ =?us-ascii?Q?D3TzPVZE+yagHzUgKPcefepG8pFtHu1UFFU3o8RvAEALGnJJk65PJn1CbRhn?=
+ =?us-ascii?Q?feIxPnPFyAV8hs6bgSBDbhBMkQhBNv6AiQo8jGqQCVRbVJRRzA9UTwJUiAIW?=
+ =?us-ascii?Q?aLUjrTs0X631C77fLNI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?y2XXmVEFvzRRDrux/oUwjRinH0mcFJhtsZ6p2PMv0ZCvZ3jGd8xCi9hC9xWd?=
+ =?us-ascii?Q?Km2jw9MORtsgAtHSJ+VmFaZCQqbqla4dfU2IyEUtIdErYo1FH9/JKGHO56f/?=
+ =?us-ascii?Q?aLE/N6l3S1alGim0PKVlkVTayC8L/wW1Ydno1laBgEG4f7zw3jhbqJxkGSOF?=
+ =?us-ascii?Q?nJdnbaHAX9/69TWOZPVxwaCjhOuZf0TZht1G5qgMqJa4UV9CnenuYrarvEkP?=
+ =?us-ascii?Q?zVnhA4YvQemd3+UxxZwLRAX4RiyOY1RC8jyFhibTHuNNjlZGlHDReqesCrTA?=
+ =?us-ascii?Q?f/lsMXmcD4V0BsCxg22L/mlV0xHg3EH2YEKDF2E9tET9jTni2Oamlqxe0d8N?=
+ =?us-ascii?Q?MHjBzD9PEn3VpFz/W1zoVeAA5Z8roEiuDjeYAyT/js7hl0GUJtYnN/BfpdE4?=
+ =?us-ascii?Q?itKEdQ4BF8HQqTBvipi65m7FsuQ1IMxJez9aFXGL4sejiiwlPwcr1aB54b5p?=
+ =?us-ascii?Q?DY2W7n545j8q/pUtBXhqUvpzu2iyR/QgM6tFXCchxhKW7gcMoQvimcFAWvk0?=
+ =?us-ascii?Q?HO/aKjaghExauRZacqX00rg0FfbCJW9lwDYaAgIblpXtMlWnwKQc5Kzt4V86?=
+ =?us-ascii?Q?1z3R8ti0U7IJcYPFQj1r/grnJk/e9afOgVEdXVpTfLgxQOgMpS8ehevPUTPB?=
+ =?us-ascii?Q?zQRRe97l/sXnlOJIYu3I+gWPkBWkbelMFaQtfyRcANpkeOUQYoM4CKsrdiw+?=
+ =?us-ascii?Q?1Hr8xVCtlwEM9UfV8/EUQ98gUk4tV83QLmLQvGxiVHch2n4Pe3I/MhoL/0yB?=
+ =?us-ascii?Q?P6+UMGFdWn7z3h3og+t5yz4JBXTMx1f34se+qWFOUe4Bb2NKyrA44zWb9APD?=
+ =?us-ascii?Q?rS1/NpdiudghRvOyPdIKgk3UTW1pxcuUJbmcBslH3SQhGSPha0Sq9GFvUUmw?=
+ =?us-ascii?Q?0UCkdHwYkYYUgM/lB55uSl5gCF6tds3Jj12kX2cPSdXUsMXqlbKOFtEoTtcS?=
+ =?us-ascii?Q?2yjQwpkaucV/eKUFnMbv2VY9rTNgaUD30di9xI2h5XwUdhQybtzlDmKd5pCI?=
+ =?us-ascii?Q?sVxCesbu8IoKrUcbNsB3HMfzRZYBnuEwJpMlI+f7CQoKHimSRwsAOD6qdQrI?=
+ =?us-ascii?Q?iD4wqLFNs8j68WuuYSNfYORMQtleN4PYDy+LShq2IVK4Nj0ElpmoaDinIk8g?=
+ =?us-ascii?Q?1rzfSQ2bRdKB/a6evWtMahdttS0JvOuNpOLyqee3R9shiPU2xzELCPG+gedU?=
+ =?us-ascii?Q?UOGdtgYgmt4gPmKPWlxvbO9qz9dhksqsc2hJosLyIihw+sFEAsmYzjaAXo/S?=
+ =?us-ascii?Q?NnTGO/F4+OYp4+ddUgL/jwmYsaRUZpiGsUk8WUAM1SOYvsfHfJWwSHYf8Dyj?=
+ =?us-ascii?Q?LxUHs/I3Nx9690YGFlOkyE4zj+eMmqqZOjdTitMPjlyE69r9woYgmuIbF58j?=
+ =?us-ascii?Q?TTv5ElRr0D5jz4Mf/FmQqcFSsfY9mvb0U7xuargjLIyWF0LFybDFM8jrRafv?=
+ =?us-ascii?Q?ksSMV2s7sPC/owWXhe89fjY19k39h0HxsyvTdoMR+fgTpdVLkhJGlZ5ocTKM?=
+ =?us-ascii?Q?CAM9gd3cJYiWnExqBfDqDqncX1EHuorSm22ELLihN+YKn3w/v2QfdjIeK8w/?=
+ =?us-ascii?Q?IQvVoN8d9JfSC1C8mqwtzPr05C20bseSK/iv+WcaSxSkcYAbMtqeyA70TNFY?=
+ =?us-ascii?Q?FIwWu+Xw3k+lRubpFZVhnRoghbuU4WHKicx2y5Vkle0WUGCdcYxQy/gphjDu?=
+ =?us-ascii?Q?2fn0wKJdvjpG4vzOyzUsw5ZXtillNK4xSYS47M5KNLWdxbajD74DCQ7DTMZg?=
+ =?us-ascii?Q?Ms6yL1MnaA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6130edc-761f-449e-e004-08de5842b8ef
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2026 16:41:12.9967
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oIkQ9gVCKzmyGnbDdk3DyM+M5xnwxv+lx2k3qBgQBl6yJFd18h3XJ4xrF7XbbDQX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6441
+X-Spamd-Result: default: False [0.04 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	TAGGED_FROM(0.00)[bounces-45287-lists,linux-pci=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	DMARC_POLICY_ALLOW(0.00)[nvidia.com,reject];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	TAGGED_FROM(0.00)[bounces-45288-lists,linux-pci=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[hotmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-pci@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jgg@nvidia.com,linux-pci@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pci];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 9F608497B9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:mid,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 3654F496B3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Jan 19, 2026 at 10:42:22PM -0800, Mukesh R wrote:
-> From: Mukesh Rathor <mrathor@linux.microsoft.com>
+On Tue, Jan 20, 2026 at 02:11:30AM +0800, Wei Wang wrote:
+> Add support for the ACS (Access Control Services) Enhanced Capability,
+> introduced with PCIe Gen 5. These new configuration options can be
+> controlled via the config_acs= boot parameter.
 > 
-> Add ioctl support for creating MSHV devices for a paritition. At
-> present only VFIO device types are supported, but more could be
-> added. At a high level, a partition ioctl to create device verifies
-> it is of type VFIO and does some setup for bridge code in mshv_vfio.c.
-> Adapted from KVM device ioctls.
-> 
-> Credits: Original author: Wei Liu <wei.liu@kernel.org>
-> NB: Slightly modified from the original version.
-> 
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root_main.c | 126 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 126 insertions(+)
-> 
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 83c7bad269a0..27313419828d 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -1551,6 +1551,129 @@ mshv_partition_ioctl_initialize(struct mshv_partition *partition)
->  	return ret;
->  }
->  
-> +static long mshv_device_attr_ioctl(struct mshv_device *mshv_dev, int cmd,
-> +				   ulong uarg)
-> +{
-> +	struct mshv_device_attr attr;
-> +	const struct mshv_device_ops *devops = mshv_dev->device_ops;
-> +
-> +	if (copy_from_user(&attr, (void __user *)uarg, sizeof(attr)))
-> +		return -EFAULT;
-> +
-> +	switch (cmd) {
-> +	case MSHV_SET_DEVICE_ATTR:
-> +		if (devops->device_set_attr)
-> +			return devops->device_set_attr(mshv_dev, &attr);
-> +		break;
-> +	case MSHV_HAS_DEVICE_ATTR:
-> +		if (devops->device_has_attr)
-> +			return devops->device_has_attr(mshv_dev, &attr);
-> +		break;
-> +	}
-> +
-> +	return -EPERM;
-> +}
-> +
-> +static long mshv_device_fop_ioctl(struct file *filp, unsigned int cmd,
-> +				  ulong uarg)
-> +{
-> +	struct mshv_device *mshv_dev = filp->private_data;
-> +
-> +	switch (cmd) {
-> +	case MSHV_SET_DEVICE_ATTR:
-> +	case MSHV_HAS_DEVICE_ATTR:
-> +		return mshv_device_attr_ioctl(mshv_dev, cmd, uarg);
-> +	}
-> +
-> +	return -ENOTTY;
-> +}
-> +
-> +static int mshv_device_fop_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct mshv_device *mshv_dev = filp->private_data;
-> +	struct mshv_partition *partition = mshv_dev->device_pt;
-> +
-> +	if (mshv_dev->device_ops->device_release) {
-> +		mutex_lock(&partition->pt_mutex);
-> +		hlist_del(&mshv_dev->device_ptnode);
-> +		mshv_dev->device_ops->device_release(mshv_dev);
-> +		mutex_unlock(&partition->pt_mutex);
-> +	}
-> +
-> +	mshv_partition_put(partition);
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations mshv_device_fops = {
-> +	.owner = THIS_MODULE,
-> +	.unlocked_ioctl = mshv_device_fop_ioctl,
-> +	.release = mshv_device_fop_release,
-> +};
-> +
-> +long mshv_partition_ioctl_create_device(struct mshv_partition *partition,
-> +					void __user *uarg)
-> +{
-> +	long rc;
-> +	struct mshv_create_device devargk;
-> +	struct mshv_device *mshv_dev;
-> +	const struct mshv_device_ops *vfio_ops;
-> +	int type;
-> +
-> +	if (copy_from_user(&devargk, uarg, sizeof(devargk))) {
-> +		rc = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	/* At present, only VFIO is supported */
-> +	if (devargk.type != MSHV_DEV_TYPE_VFIO) {
-> +		rc = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	if (devargk.flags & MSHV_CREATE_DEVICE_TEST) {
-> +		rc = 0;
-> +		goto out;
-> +	}
-> +
-> +	mshv_dev = kzalloc(sizeof(*mshv_dev), GFP_KERNEL_ACCOUNT);
-> +	if (mshv_dev == NULL) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	vfio_ops = &mshv_vfio_device_ops;
-> +	mshv_dev->device_ops = vfio_ops;
-> +	mshv_dev->device_pt = partition;
-> +
-> +	rc = vfio_ops->device_create(mshv_dev, type);
-> +	if (rc < 0) {
-> +		kfree(mshv_dev);
-> +		goto out;
-> +	}
-> +
-> +	hlist_add_head(&mshv_dev->device_ptnode, &partition->pt_devices);
-> +
-> +	mshv_partition_get(partition);
-> +	rc = anon_inode_getfd(vfio_ops->device_name, &mshv_device_fops,
-> +			      mshv_dev, O_RDWR | O_CLOEXEC);
-> +	if (rc < 0) {
-> +		mshv_partition_put(partition);
-> +		hlist_del(&mshv_dev->device_ptnode);
-> +		vfio_ops->device_release(mshv_dev);
-> +		goto out;
-> +	}
-> +
-> +	devargk.fd = rc;
-> +	rc = 0;
-> +
-> +	if (copy_to_user(uarg, &devargk, sizeof(devargk))) {
+> By default, the ACS Unclaimed Request Redirect Control (URRC) bit is
+> enabled if supported by the hardware (i.e., if the ACS Enhanced Capability
+> is present). This setting is particularly important for device passthrough
+> in virtualization scenarios.
 
-Shouldn't the partition be put here?
+The memory target access bits should be set to request redirect as
+well. Linux's grouping logic effectively has assumed the enabled behavior
+forever.
 
-Thanks,
-Stanislav
-
-> +		rc = -EFAULT;
-> +		goto out;
-> +	}
-> +out:
-> +	return rc;
-> +}
-> +
->  static long
->  mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->  {
-> @@ -1587,6 +1710,9 @@ mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->  	case MSHV_ROOT_HVCALL:
->  		ret = mshv_ioctl_passthru_hvcall(partition, true, uarg);
->  		break;
-> +	case MSHV_CREATE_DEVICE:
-> +		ret = mshv_partition_ioctl_create_device(partition, uarg);
-> +		break;
->  	default:
->  		ret = -ENOTTY;
->  	}
-> -- 
-> 2.51.2.vfs.0.1
-> 
+Jason
 
